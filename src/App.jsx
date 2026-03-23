@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { Analytics } from '@vercel/analytics/react'
 import ThemeSwitcher from './components/ThemeSwitcher'
 import Terminal from './themes/Terminal'
 import Editorial from './themes/Editorial'
@@ -25,6 +26,7 @@ export default function App() {
           {theme === 'glass' && <Glass />}
         </motion.div>
       </AnimatePresence>
+      <Analytics />
     </div>
   )
 }
