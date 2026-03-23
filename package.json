@@ -3,11 +3,12 @@
   "version": "2.0.0",
   "private": true,
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
+    "framer-motion": "^10.18.0",
+    "lucide-react": "^0.383.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "framer-motion": "^10.18.0",
-    "lucide-react": "^0.383.0",
     "three": "^0.160.0"
   },
   "scripts": {
@@ -15,7 +16,13 @@
     "build": "react-scripts build"
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
-    "development": ["last 1 chrome version"]
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version"
+    ]
   }
 }
