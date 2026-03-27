@@ -122,16 +122,49 @@ export default function MusicWidget() {
   const playerContainerRef = useRef(null)
   const track = playlist[current]
 
-  // Fetch real playlist tracks when widget opens
+  // Initialize YouTube player on page load (not on widget open)
   useEffect(() => {
-    if (!open) return
+    loadYouTubeAPI()
     fetchPlaylistTracks().then(tracks => {
-      if (tracks && tracks.length > 0) {
-        setPlaylist(tracks)
-        setPlaylistLoaded(true)
-      }
+      if (tracks && tracks.length > 0) setPlaylist(tracks)
     })
-  }, [open])
+    whenYtReady(() => {
+      if (playerRef.current) return
+      if (!playerContainerRef.current) return
+
+      playerRef.current = new window.YT.Player(playerContainerRef.current, {
+        height: '0',
+        width: '0',
+        playerVars: {
+          listType: 'playlist',
+          list: YOUTUBE_PLAYLIST_ID,
+          autoplay: 1,
+          controls: 0,
+          disablekb: 1,
+          fs: 0,
+          modestbranding: 1,
+          playsinline: 1,
+          rel: 0,
+          showinfo: 0,
+          loop: 1,
+        },
+        events: {
+          onReady: (e) => {
+            setIframeReady(true)
+            e.target.setVolume(80)
+          },
+          onStateChange: (e) => {
+            if (e.data === window.YT.PlayerState.PLAYING) {
+              setPlaying(true)
+              startProgressLoop()
+            } else if (e.data === window.YT.PlayerState.PAUSED) {
+              setPlaying(false)
+            }
+          },
+        },
+      })
+    })
+  }, [])
   useEffect(() => {
     if (!open) return
     loadYouTubeAPI()
@@ -252,8 +285,26 @@ export default function MusicWidget() {
       {/* Hidden YouTube player */}
       <div ref={playerContainerRef} style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden', opacity: 0, pointerEvents: 'none' }} />
 
+      {/* Always-visible collapsed button */}
+      {!open && (
+        <motion.button
+          className="mw-collapsed"
+          onClick={() => setOpen(true)}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          {playing ? '♫' : '♩'}
+          <span className="mw-collapsed-label">Music</span>
+          {playing && <span className="mw-pulse" />}
+        </motion.button>
+      )}
+
+      {/* Expanded panel */}
       <AnimatePresence>
-        {open ? (
+        {open && (
           <motion.div
             className="mw-expanded"
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -286,7 +337,7 @@ export default function MusicWidget() {
                 onError={e => { e.target.src = 'https://picsum.photos/40/40' }}
               />
               <div className="mw-track">
-                <div className="mw-title">{track?.title || 'No track'}</div>
+                <div className="mw-title">{track?.title || 'Loading...'}</div>
                 <div className="mw-artist">YouTube Music</div>
               </div>
             </div>
@@ -311,7 +362,6 @@ export default function MusicWidget() {
               <button
                 className="mw-btn mw-play"
                 onClick={handlePlayPause}
-                disabled={!iframeReady && !playerRef.current}
               >
                 {playing ? '⏸' : '▶'}
               </button>
@@ -322,7 +372,6 @@ export default function MusicWidget() {
             {showEditor && (
               <PlaylistEditor playlist={playlist} onSave={(newPl) => {
                 setPlaylist(newPl)
-                // Recreate player with new playlist
                 if (playerRef.current) {
                   try { playerRef.current.destroy() } catch (_) {}
                   playerRef.current = null
@@ -351,20 +400,6 @@ export default function MusicWidget() {
               ))}
             </div>
           </motion.div>
-        ) : (
-          <motion.button
-            className="mw-collapsed"
-            onClick={() => setOpen(true)}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {playing ? '♫' : '♩'}
-            <span className="mw-collapsed-label">Music</span>
-            {playing && <span className="mw-pulse" />}
-          </motion.button>
         )}
       </AnimatePresence>
     </>
