@@ -61,6 +61,8 @@ export default function MusicWidget() {
   const [current, setCurrent] = useState(0)
   const [playing, setPlaying] = useState(false)
   const [muted, setMuted] = useState(true)
+  const [volume, setVolume] = useState(80)
+  const [showVolume, setShowVolume] = useState(false)
   const [progress, setProgress] = useState(0)
   const [duration, setDuration] = useState(0)
   const [iframeReady, setIframeReady] = useState(false)
@@ -135,7 +137,7 @@ export default function MusicWidget() {
         events: {
           onReady: (e) => {
             setIframeReady(true)
-            e.target.setVolume(muted ? 0 : 80)
+            e.target.setVolume(muted ? 0 : volume)
             e.target.playVideo()
             setPlaying(true)
           },
@@ -159,11 +161,11 @@ export default function MusicWidget() {
   useEffect(() => {
     if (!playerRef.current || !iframeReady) return
     try {
-      playerRef.current.setVolume(muted ? 0 : 80)
+      playerRef.current.setVolume(muted ? 0 : volume)
       if (muted) playerRef.current.mute()
       else playerRef.current.unMute()
     } catch (_) {}
-  }, [muted, iframeReady])
+  }, [muted, iframeReady, volume])
 
   // ── Cancel progress loop when paused ──
   useEffect(() => {
@@ -190,7 +192,32 @@ export default function MusicWidget() {
     setPlaying(true)
   }
 
-  const handleMuteToggle = () => setMuted(m => !m)
+  const handleMuteToggle = () => {
+    if (muted) {
+      setMuted(false)
+      setVolume(80)
+      if (playerRef.current && iframeReady) {
+        playerRef.current.unMute()
+        playerRef.current.setVolume(80)
+      }
+    } else {
+      setMuted(true)
+      if (playerRef.current && iframeReady) {
+        playerRef.current.mute()
+      }
+    }
+  }
+
+  const handleVolumeChange = (e) => {
+    const v = parseInt(e.target.value)
+    setVolume(v)
+    setMuted(v === 0)
+    if (playerRef.current && iframeReady) {
+      playerRef.current.setVolume(v)
+      if (v === 0) playerRef.current.mute()
+      else playerRef.current.unMute()
+    }
+  }
 
   const handleSeek = (e) => {
     if (!playerRef.current || !duration) return
@@ -246,10 +273,25 @@ export default function MusicWidget() {
 
           {/* Right side: volume + expand */}
           <div className="mw-bar-right">
-            {/* Mute/Unmute */}
-            <button className="mw-bar-btn" onClick={handleMuteToggle} title={muted ? 'Unmute' : 'Mute'}>
-              {muted ? '🔇' : '🔊'}
-            </button>
+            {/* Volume control */}
+            <div className="mw-vol-wrap">
+              <button className="mw-bar-btn" onClick={() => setShowVolume(v => !v)} title={muted ? 'Unmute' : 'Mute'}>
+                {muted || volume === 0 ? '🔇' : volume < 50 ? '🔉' : '🔊'}
+              </button>
+              {showVolume && (
+                <div className="mw-vol-slider-wrap">
+                  <input
+                    type="range"
+                    className="mw-vol-slider"
+                    min="0"
+                    max="100"
+                    value={muted ? 0 : volume}
+                    onChange={handleVolumeChange}
+                  />
+                  <span className="mw-vol-val">{muted ? 0 : volume}%</span>
+                </div>
+              )}
+            </div>
 
             {/* Time */}
             <span className="mw-bar-time">{formatTime(progress)} / {formatTime(duration)}</span>
