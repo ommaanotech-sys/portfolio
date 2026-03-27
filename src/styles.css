@@ -300,6 +300,103 @@ a { text-decoration: none; color: inherit; }
   animation: pulse 1s ease-in-out infinite;
 }
 
+.mw-playing-bar {
+  font-size: 9px;
+  color: #4ade80;
+  flex-shrink: 0;
+}
+
+.mw-settings-btn {
+  background: none;
+  border: none;
+  color: #4a4a4a;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+.mw-settings-btn:hover { color: #4ade80; }
+
+.mw-list-thumb {
+  width: 28px;
+  height: 20px;
+  object-fit: cover;
+  border-radius: 2px;
+  flex-shrink: 0;
+  background: #1a1a1a;
+}
+
+.mw-playlist-editor {
+  border-top: 0.5px solid rgba(74, 222, 128, 0.12);
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.2);
+}
+.mw-editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.mw-editor-label {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: #4a4a4a;
+  text-transform: uppercase;
+}
+.mw-editor-toggle {
+  background: none;
+  border: 0.5px solid #1e3a1e;
+  color: #4ade80;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+.mw-editor-toggle:hover { background: #0d1a0d; }
+.mw-editor-textarea {
+  width: 100%;
+  background: #0a0a0a;
+  border: 0.5px solid #1e3a1e;
+  color: #e5e5e5;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 8px;
+  outline: none;
+  resize: vertical;
+  border-radius: 4px;
+  line-height: 1.6;
+  box-sizing: border-box;
+}
+.mw-editor-textarea:focus { border-color: #4ade80; }
+.mw-editor-hint {
+  font-size: 9px;
+  color: #4a4a4a;
+  margin-top: 6px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.mw-editor-hint code {
+  color: #4ade80;
+  font-size: 9px;
+}
+.mw-editor-apply {
+  margin-top: 8px;
+  background: #0d1a0d;
+  border: 0.5px solid #4ade80;
+  color: #4ade80;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 5px 12px;
+  cursor: pointer;
+  border-radius: 2px;
+  width: 100%;
+  transition: all 0.2s;
+}
+.mw-editor-apply:hover { background: #4ade80; color: #0a0a0a; }
+
 @media (max-width: 600px) {
   .mw-expanded { width: calc(100vw - 32px); left: 16px; bottom: 16px; }
   .mw-collapsed { bottom: 16px; left: 16px; }
