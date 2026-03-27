@@ -313,7 +313,7 @@ a { text-decoration: none; color: inherit; }
 .t-output { margin-bottom: 24px; }
 .t-line { font-size: 12px; line-height: 2; }
 .t-skill-row { display: flex; align-items: center; font-size: 12px; margin-bottom: 6px; }
-.t-skill-name { color: #a3a3a3; min-width: 180px; }
+.t-skill-name { color: #a3a3a3; min-width: 120px; flex-shrink: 0; }
 .t-skill-bar { color: #1e4a1e; letter-spacing: 2px; }
 .t-skill-label { font-size: 10px; color: #4ade80; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.06em; margin-left: 8px; }
 .t-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
@@ -647,10 +647,32 @@ a { text-decoration: none; color: inherit; }
 /* ============================================================ */
 /* MEDIA QUERIES */
 /* ============================================================ */
+/* ============================================================ */
+/* MOBILE GLOBAL — all breakpoints */
+/* ============================================================ */
 @media (max-width: 600px) {
-  .mw-bar-title { font-size: 12px !important; }
+  /* Terminal theme */
+  .t-body { padding: 14px !important; }
+  .t-skill-row { flex-wrap: wrap !important; row-gap: 4px; }
+  .t-skill-name { min-width: 0 !important; font-size: 11px !important; flex: 0 0 100%; }
+  .t-skill-bar { max-width: 100% !important; width: 100% !important; font-size: 10px !important; display: block !important; overflow: hidden !important; }
+  .t-skill-label { margin-left: 0 !important; }
+  .t-nav-btn { padding: 8px 12px !important; font-size: 11px !important; }
+  .t-titlebar { padding: 8px 12px !important; }
+  .t-project-header { font-size: 11px !important; }
+  .t-line { font-size: 11px !important; }
+  .t-prompt { font-size: 11px !important; }
+  .t-cli-boot { font-size: 10px !important; }
+  .t-cli-input { font-size: 11px !important; }
+  .t-cli-hist-cmd { font-size: 11px !important; }
+  .t-cli-hist-out { font-size: 11px !important; }
+  .t-form { gap: 8px !important; }
+  .t-form-field input, .t-form-field textarea { font-size: 11px !important; padding: 7px 10px !important; }
+
+  /* Music bar mobile */
+  .mw-bar-title { font-size: 12px !important; text-overflow: ellipsis !important; overflow: hidden !important; white-space: nowrap !important; max-width: 120px !important; }
   .mw-bar-btn { font-size: 16px !important; padding: 6px 8px !important; }
-  .mw-bar-controls { padding: 8px 12px !important; }
+  .mw-bar-controls { padding: 8px 12px !important; gap: 6px !important; }
   .mw-bar-right { gap: 4px !important; }
   .mw-bar-expand { font-size: 14px !important; }
   .mw-bar-playlist { max-height: 180px; }
@@ -658,15 +680,33 @@ a { text-decoration: none; color: inherit; }
   .mw-bar-list-item { padding: 9px 12px !important; }
   .mw-bar-list-thumb { width: 36px !important; height: 26px !important; }
   .mw-bar-time { display: none !important; }
+  .mw-bar-progress { height: 2px; }
 
-  .e-cover { grid-template-columns: 1fr; }
-  .e-cover-side { flex-direction: row; border-left: none; border-top: 1px solid #e5e5e5; }
-  .e-projects, .e-cover-bottom, .g-projects, .g-skills, .e-skills-grid, .e-form-row, .g-form-row { grid-template-columns: 1fr; }
-  .g-stats { gap: 16px; }
-  .theme-switcher { right: 8px; top: 8px; }
-  .g-nav { padding: 14px 16px; }
-  .g-content { padding: 0 16px 40px; }
-  .e-nav { padding: 12px 16px; }
-  .e-section { padding: 20px 16px; }
-  .e-cover-main { padding: 20px; }
+  /* Editorial */
+  .e-cover { grid-template-columns: 1fr !important; }
+  .e-cover-side { flex-direction: row !important; border-left: none !important; border-top: 1px solid #e5e5e5 !important; }
+  .e-projects, .e-cover-bottom, .g-projects, .g-skills, .e-skills-grid, .e-form-row, .g-form-row { grid-template-columns: 1fr !important; }
+  .g-stats { gap: 16px !important; }
+  .theme-switcher { right: 8px !important; top: 8px !important; }
+  .g-nav { padding: 14px 16px !important; }
+  .g-content { padding: 0 16px 40px !important; }
+  .e-nav { padding: 12px 16px !important; }
+  .e-section { padding: 20px 16px !important; }
+  .e-cover-main { padding: 20px !important; }
+  .e-cover-bottom { grid-template-columns: 1fr !important; }
+
+  /* Scroll progress sits below music bar on mobile */
+  body { padding-top: 52px; }
+}
+
+@media (max-width: 400px) {
+  .mw-bar-expand { display: none !important; }
+  .mw-bar-title { max-width: 90px !important; }
+}
+
+/* ============================================================ */
+/* LARGE DESKTOP OVERRIDES */
+/* ============================================================ */
+@media (min-width: 1200px) {
+  .t-body { padding: 32px !important; max-width: 960px !important; margin: 0 auto; }
 }

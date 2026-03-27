@@ -198,9 +198,8 @@ function SkillBarVisual({ level, isInView }) {
     <motion.span
       className="t-skill-bar"
       initial={{ width: 0 }}
-      animate={isInView ? { width: 'auto' } : {}}
+      animate={isInView ? { width: '100%' } : {}}
       transition={{ duration: 0.8, ease: 'easeOut' }}
-      style={{ display: 'inline-block', maxWidth: '180px', width: '180px' }}
     >
       {'█'.repeat(pct)}{'░'.repeat(10 - pct)}
     </motion.span>
