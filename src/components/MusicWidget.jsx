@@ -27,7 +27,7 @@ function whenYtReady(cb) {
 
 // ─── Playlist ───
 const YOUTUBE_PLAYLIST_ID = 'PLfvvdsuspW5JsE94MWUya5zZRsZTRy8qM'
-const YOUTUBE_API_KEY = 'AIzaSyDtiorgcXIpHQr6mYlLfLRFlNiF-4JT5yE'
+const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY
 
 async function fetchPlaylistTracks() {
   try {
