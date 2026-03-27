@@ -28,15 +28,32 @@ function whenYtReady(cb) {
 }
 
 // ──────────────────────────────────────────────
-// DEFAULT PLAYLIST — Works out of the box
-// Replace with your own YouTube video IDs anytime via the ⚙ editor
+// YOUR PLAYLIST — loaded directly from YouTube Music
 // ──────────────────────────────────────────────
+const YOUTUBE_PLAYLIST_ID = 'PLfvvdsuspW5JsE94MWUya5zZRsZTRy8qM'
+const YOUTUBE_API_KEY = 'AIzaSyCjE6ZvG8GErsU6Ic71nN92r7Z6Z2RG9Ww' // Public demo key — replace with your own
+
+async function fetchPlaylistTracks() {
+  try {
+    const res = await fetch(
+      `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${YOUTUBE_PLAYLIST_ID}&maxResults=50&key=${YOUTUBE_API_KEY}`
+    )
+    const data = await res.json()
+    if (data.items) {
+      return data.items.map(item => ({
+        id: item.snippet.resourceId.videoId,
+        title: item.snippet.title || 'Untitled',
+        thumbnail: item.snippet.thumbnails?.default?.url || '',
+      }))
+    }
+  } catch (e) {
+    console.warn('Could not fetch playlist:', e)
+  }
+  return null
+}
+
 const DEFAULT_PLAYLIST = [
-  { id: 'jfKfPfyJRdk', title: 'Lofi Girl — beats to relax/study to' },
-  { id: 'rUxyKA_-grg', title: 'Synthwave Radio — 80s vibes' },
-  { id: '5qap5aO4i9A', title: 'Lofi Hip Hop Radio — chill beats' },
-  { id: 'aatr0L6PBSM', title: 'Lofi Hip Hop Radio — 24/7' },
-  { id: '4xDzrJKXOOY', title: 'Studio Ghibli Music — magical vibes' },
+  { id: 'jfKfPfyJRdk', title: 'Loading your playlist...' },
 ]
 
 window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady
@@ -95,6 +112,7 @@ export default function MusicWidget() {
   const [playing, setPlaying] = useState(false)
   const [current, setCurrent] = useState(0)
   const [playlist, setPlaylist] = useState(DEFAULT_PLAYLIST)
+  const [playlistLoaded, setPlaylistLoaded] = useState(false)
   const [progress, setProgress] = useState(0)
   const [duration, setDuration] = useState(0)
   const [open, setOpen] = useState(false)
@@ -104,7 +122,16 @@ export default function MusicWidget() {
   const playerContainerRef = useRef(null)
   const track = playlist[current]
 
-  // Load YouTube API on first open
+  // Fetch real playlist tracks when widget opens
+  useEffect(() => {
+    if (!open) return
+    fetchPlaylistTracks().then(tracks => {
+      if (tracks && tracks.length > 0) {
+        setPlaylist(tracks)
+        setPlaylistLoaded(true)
+      }
+    })
+  }, [open])
   useEffect(() => {
     if (!open) return
     loadYouTubeAPI()
@@ -113,12 +140,12 @@ export default function MusicWidget() {
       if (playerRef.current) return
       if (!playerContainerRef.current) return
 
-      const videoIds = playlist.map(t => t.id)
       playerRef.current = new window.YT.Player(playerContainerRef.current, {
         height: '0',
         width: '0',
-        videoId: videoIds[0],
         playerVars: {
+          listType: 'playlist',
+          list: YOUTUBE_PLAYLIST_ID,
           autoplay: 1,
           controls: 0,
           disablekb: 1,
@@ -127,7 +154,6 @@ export default function MusicWidget() {
           playsinline: 1,
           rel: 0,
           showinfo: 0,
-          playlist: videoIds.join(','),
           loop: 1,
         },
         events: {
@@ -205,8 +231,14 @@ export default function MusicWidget() {
   }
 
   const handlePlaylistSelect = (i) => {
-    if (!playerRef.current) { setCurrent(i); setPlaying(true); return }
-    playerRef.current.playVideoAt(i)
+    if (!playerRef.current || !iframeReady) { setCurrent(i); setPlaying(true); return }
+    try {
+      playerRef.current.playVideoAt(i)
+    } catch (_) {
+      // Fallback: load video directly
+      const vid = playlist[i]?.id
+      if (vid) playerRef.current.loadVideoById(vid)
+    }
     setCurrent(i)
     setPlaying(true)
   }
