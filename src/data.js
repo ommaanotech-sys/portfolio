@@ -89,13 +89,6 @@ export const data = {
 
   education: [
     {
-      degree: 'National Diploma — IT Systems Development',
-      school: 'CTU Training Solutions',
-      location: 'Potchefstroom, South Africa',
-      year: '2022',
-      nqf: 'NQF Level 5',
-    },
-    {
       degree: 'High School Diploma',
       school: 'Realeka Secondary School',
       location: 'Ottosdal, South Africa',
