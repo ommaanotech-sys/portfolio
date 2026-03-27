@@ -69,17 +69,17 @@ export default function MusicWidget() {
   const [expanded, setExpanded] = useState(false)
   const barRef = useRef(null)
 
-  // Close playlist when clicking outside
+  // Close playlist and volume when clicking outside
   useEffect(() => {
-    if (!expanded) return
     const handleClick = (e) => {
       if (barRef.current && !barRef.current.contains(e.target)) {
         setExpanded(false)
+        setShowVolume(false)
       }
     }
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
-  }, [expanded])
+  }, [])
   const playerRef = useRef(null)
   const playerContainerRef = useRef(null)
   const progressRef = useRef(null)
@@ -145,6 +145,11 @@ export default function MusicWidget() {
             if (e.data === window.YT.PlayerState.PLAYING) {
               setPlaying(true)
               startProgressLoop()
+              // Sync track index on next/prev
+              try {
+                const idx = e.target.getPlaylistIndex()
+                if (typeof idx === 'number') setCurrent(idx)
+              } catch (_) {}
             } else if (e.data === window.YT.PlayerState.PAUSED) {
               setPlaying(false)
               cancelAnimationFrame(progressRef.current)
