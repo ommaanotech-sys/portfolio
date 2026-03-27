@@ -28,17 +28,15 @@ function whenYtReady(cb) {
 }
 
 // ──────────────────────────────────────────────
-// PLAYLIST — Replace these with your own video IDs
-// Get video IDs from any YouTube playlist URL:
-// https://www.youtube.com/playlist?list=PLrAXtmErZgOeiKm4sgNOknGvNjby9efdf
-// Or replace with your own array of { id, title, thumbnail } objects
+// DEFAULT PLAYLIST — Works out of the box
+// Replace with your own YouTube video IDs anytime via the ⚙ editor
 // ──────────────────────────────────────────────
-const PLAYLIST = [
-  { id: 'aatr0L6PBSM', title: 'Lofi Hip Hop Radio', thumbnail: 'https://img.youtube.com/vi/aatr0L6PBSM/1.jpg' },
-  { id: '4xDzrJKXOOY', title: 'Studio Ghibli Music', thumbnail: 'https://img.youtube.com/vi/4xDzrJKXOOY/1.jpg' },
-  { id: 'jfKfPfyJRdk', title: 'lofi girl beats to relax', thumbnail: 'https://img.youtube.com/vi/jfKfPfyJRdk/1.jpg' },
-  { id: 'rUxyKA_-grg', title: 'Synthwave Radio', thumbnail: 'https://img.youtube.com/vi/rUxyKA_-grg/1.jpg' },
-  { id: '5qap5aO4i9A', title: 'Chillhop Radio', thumbnail: 'https://img.youtube.com/vi/5qap5aO4i9A/1.jpg' },
+const DEFAULT_PLAYLIST = [
+  { id: 'jfKfPfyJRdk', title: 'Lofi Girl — beats to relax/study to' },
+  { id: 'rUxyKA_-grg', title: 'Synthwave Radio — 80s vibes' },
+  { id: '5qap5aO4i9A', title: 'Lofi Hip Hop Radio — chill beats' },
+  { id: 'aatr0L6PBSM', title: 'Lofi Hip Hop Radio — 24/7' },
+  { id: '4xDzrJKXOOY', title: 'Studio Ghibli Music — magical vibes' },
 ]
 
 window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady
@@ -96,7 +94,7 @@ function PlaylistEditor({ playlist, onSave }) {
 export default function MusicWidget() {
   const [playing, setPlaying] = useState(false)
   const [current, setCurrent] = useState(0)
-  const [playlist, setPlaylist] = useState(PLAYLIST)
+  const [playlist, setPlaylist] = useState(DEFAULT_PLAYLIST)
   const [progress, setProgress] = useState(0)
   const [duration, setDuration] = useState(0)
   const [open, setOpen] = useState(false)
@@ -111,43 +109,44 @@ export default function MusicWidget() {
     if (!open) return
     loadYouTubeAPI()
     whenYtReady(() => {
-      if (!playerRef.current && playerContainerRef.current) {
-        playerRef.current = new window.YT.Player(playerContainerRef.current, {
-          height: '0',
-          width: '0',
-          playerVars: {
-            listType: 'playlist',
-            list: playlist.map(t => t.id).join(','),
-            autoplay: 0,
-            controls: 0,
-            disablekb: 1,
-            fs: 0,
-            modestbranding: 1,
-            playsinline: 1,
-            rel: 0,
-            showinfo: 0,
+      // Only init once
+      if (playerRef.current) return
+      if (!playerContainerRef.current) return
+
+      const videoIds = playlist.map(t => t.id)
+      playerRef.current = new window.YT.Player(playerContainerRef.current, {
+        height: '0',
+        width: '0',
+        videoId: videoIds[0],
+        playerVars: {
+          autoplay: 1,
+          controls: 0,
+          disablekb: 1,
+          fs: 0,
+          modestbranding: 1,
+          playsinline: 1,
+          rel: 0,
+          showinfo: 0,
+          playlist: videoIds.join(','),
+          loop: 1,
+        },
+        events: {
+          onReady: (e) => {
+            setIframeReady(true)
+            e.target.setVolume(80)
+            e.target.playVideo()
+            setPlaying(true)
           },
-          events: {
-            onReady: (e) => {
-              setIframeReady(true)
-              try {
-                const pl = e.target.getPlaylist()
-                if (pl && pl.length > 0) e.target.playVideoAt(0)
-              } catch (_) {}
-            },
-            onStateChange: (e) => {
-              if (e.data === window.YT.PlayerState.PLAYING) {
-                setPlaying(true)
-                startProgressLoop()
-              } else if (e.data === window.YT.PlayerState.PAUSED) {
-                setPlaying(false)
-              } else if (e.data === window.YT.PlayerState.ENDED) {
-                // YouTube iframe handles playlist advance automatically
-              }
-            },
+          onStateChange: (e) => {
+            if (e.data === window.YT.PlayerState.PLAYING) {
+              setPlaying(true)
+              startProgressLoop()
+            } else if (e.data === window.YT.PlayerState.PAUSED) {
+              setPlaying(false)
+            }
           },
-        })
-      }
+        },
+      })
     })
   }, [open])
 
