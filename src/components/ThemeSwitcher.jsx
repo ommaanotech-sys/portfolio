@@ -2,8 +2,8 @@ import { motion } from 'framer-motion'
 
 const themes = [
   { id: 'terminal', label: 'Terminal', emoji: '>_' },
-  { id: 'editorial', label: 'Editorial', emoji: '§' },
-  { id: 'glass', label: 'Glassmorphism', emoji: '◈' },
+  // { id: 'editorial', label: 'Editorial', emoji: '§' },
+  // { id: 'glass', label: 'Glassmorphism', emoji: '◈' },
 ]
 
 export default function ThemeSwitcher({ current, onChange }) {
