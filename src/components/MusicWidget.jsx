@@ -65,6 +65,19 @@ export default function MusicWidget() {
   const [duration, setDuration] = useState(0)
   const [iframeReady, setIframeReady] = useState(false)
   const [expanded, setExpanded] = useState(false)
+  const barRef = useRef(null)
+
+  // Close playlist when clicking outside
+  useEffect(() => {
+    if (!expanded) return
+    const handleClick = (e) => {
+      if (barRef.current && !barRef.current.contains(e.target)) {
+        setExpanded(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [expanded])
   const playerRef = useRef(null)
   const playerContainerRef = useRef(null)
   const progressRef = useRef(null)
@@ -193,7 +206,7 @@ export default function MusicWidget() {
       <div ref={playerContainerRef} style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden', opacity: 0, pointerEvents: 'none' }} />
 
       {/* ── Top-right music bar ── */}
-      <div className="mw-bar">
+      <div className="mw-bar" ref={barRef}>
 
         {/* Progress bar — full width at top */}
         <div className="mw-bar-progress" onClick={handleSeek}>
