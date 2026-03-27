@@ -172,6 +172,12 @@ Location: ${data.location}`
 function SkillBar({ name, level, delay }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-60px' })
+  const label =
+    level >= 90 ? 'Expert' :
+    level >= 78 ? 'Advanced' :
+    level >= 65 ? 'Proficient' :
+    level >= 50 ? 'Intermediate' :
+    'Familiar'
   return (
     <motion.div
       ref={ref}
@@ -182,7 +188,7 @@ function SkillBar({ name, level, delay }) {
     >
       <span className="t-skill-name">{name}</span>
       <SkillBarVisual level={level} isInView={isInView} />
-      <AnimatedNumber target={level} isInView={isInView} />
+      <span className="t-green t-skill-label">{label}</span>
     </motion.div>
   )
 }
@@ -190,26 +196,16 @@ function SkillBar({ name, level, delay }) {
 function SkillBarVisual({ level, isInView }) {
   const pct = Math.round(level / 10)
   return (
-    <span className="t-skill-bar">
+    <motion.span
+      className="t-skill-bar"
+      initial={{ width: 0 }}
+      animate={isInView ? { width: 'auto' } : {}}
+      transition={{ duration: 0.8, ease: 'easeOut' }}
+      style={{ display: 'inline-block', maxWidth: '180px', width: '180px' }}
+    >
       {'█'.repeat(pct)}{'░'.repeat(10 - pct)}
-    </span>
+    </motion.span>
   )
-}
-
-function AnimatedNumber({ target, isInView }) {
-  const [val, setVal] = useState(0)
-  useEffect(() => {
-    if (!isInView) return
-    let start = 0
-    const dur = 1000, step = target / (dur / 16)
-    const timer = setInterval(() => {
-      start += step
-      if (start >= target) { setVal(target); clearInterval(timer) }
-      else setVal(Math.round(start))
-    }, 16)
-    return () => clearInterval(timer)
-  }, [isInView, target])
-  return <span className="t-green"> {val}%</span>
 }
 
 /* ─── Contact Form ─── */

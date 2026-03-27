@@ -1,13 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import ThemeSwitcher from './components/ThemeSwitcher'
 import Terminal from './themes/Terminal'
 import Editorial from './themes/Editorial'
 import Glass from './themes/Glass'
 import './styles.css'
 
 export default function App() {
-  const [theme, setTheme] = useState('terminal')
+  const [theme] = useState('terminal')
   const [scrollProgress, setScrollProgress] = useState(0)
   const [showCursor, setShowCursor] = useState(false)
   const [cursorTheme, setCursorTheme] = useState('terminal')
@@ -112,8 +111,6 @@ export default function App() {
         }}
       />
 
-      <ThemeSwitcher current={theme} onChange={setTheme} />
-
       <AnimatePresence mode="wait">
         <motion.div
           key={theme}
@@ -122,9 +119,7 @@ export default function App() {
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.25 }}
         >
-          {theme === 'terminal' && <Terminal onThemeChange={setTheme} />}
-          {theme === 'editorial' && <Editorial onThemeChange={setTheme} />}
-          {theme === 'glass' && <Glass onThemeChange={setTheme} />}
+          <Terminal />
         </motion.div>
       </AnimatePresence>
 

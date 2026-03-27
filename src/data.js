@@ -6,7 +6,7 @@ export const data = {
   title: 'Junior IT Systems Developer',
   subtitles: ['Junior IT Systems Developer', 'Web · Cloud · Systems', 'React · SQL · AWS · Python'],
   email: 'ommaano.tech@gmail.com',
-  phone: '07 226 8145',
+  phone: '072 268 1455',
   location: 'South Africa',
   github: 'github.com/ommaanotech-sys',
   githubUrl: 'https://github.com/ommaanotech-sys',
