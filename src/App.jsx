@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Terminal from './themes/Terminal'
 import Editorial from './themes/Editorial'
 import Glass from './themes/Glass'
+import MusicWidget from './components/MusicWidget'
 import './styles.css'
 
 export default function App() {
@@ -122,6 +123,8 @@ export default function App() {
           <Terminal />
         </motion.div>
       </AnimatePresence>
+
+      <MusicWidget />
 
       {/* Back to Top */}
       <AnimatePresence>
