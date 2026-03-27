@@ -648,6 +648,17 @@ a { text-decoration: none; color: inherit; }
 /* MEDIA QUERIES */
 /* ============================================================ */
 @media (max-width: 600px) {
+  .mw-bar-title { font-size: 12px !important; }
+  .mw-bar-btn { font-size: 16px !important; padding: 6px 8px !important; }
+  .mw-bar-controls { padding: 8px 12px !important; }
+  .mw-bar-right { gap: 4px !important; }
+  .mw-bar-expand { font-size: 14px !important; }
+  .mw-bar-playlist { max-height: 180px; }
+  .mw-bar-list-title { font-size: 12px !important; }
+  .mw-bar-list-item { padding: 9px 12px !important; }
+  .mw-bar-list-thumb { width: 36px !important; height: 26px !important; }
+  .mw-bar-time { display: none !important; }
+
   .e-cover { grid-template-columns: 1fr; }
   .e-cover-side { flex-direction: row; border-left: none; border-top: 1px solid #e5e5e5; }
   .e-projects, .e-cover-bottom, .g-projects, .g-skills, .e-skills-grid, .e-form-row, .g-form-row { grid-template-columns: 1fr; }
