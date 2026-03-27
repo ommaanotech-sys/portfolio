@@ -70,7 +70,6 @@ function LiveTerminal() {
   about        → Bio & overview
   skills       → Technical skills
   projects     → Featured projects
-  experience   → Work history
   credentials  → Certs & education
   contact      → Contact info
   whoami       → Current user
@@ -109,7 +108,7 @@ Phone:   ${data.phone}
 GitHub:  ${data.githubUrl}
 Location: ${data.location}`
       case 'whoami': return 'omphile'
-      case 'ls': return 'about/  skills/  projects/  experience/  credentials/  contact/'
+      case 'ls': return 'about/  skills/  projects/  credentials/  contact/'
       case 'date': return new Date().toString()
       case 'clear': return '__CLEAR__'
       case 'theme': return 'Terminal Theme — omphile-portfolio v2.0\nStyle: Vintage Hacker CLI\nFont: JetBrains Mono'
@@ -306,7 +305,7 @@ function PromptLine({ text }) {
 /* ─── Main Terminal ─── */
 export default function Terminal() {
   const [activeSection, setActiveSection] = useState('about')
-  const sections = ['about', 'skills', 'projects', 'experience', 'credentials', 'contact']
+  const sections = ['about', 'skills', 'projects', 'credentials', 'contact']
 
   return (
     <div className="t-wrap">
@@ -378,25 +377,6 @@ export default function Terminal() {
                         <div className="t-line">  └─ <a href={p.link} target="_blank" rel="noreferrer" className="t-blue" style={{ textDecoration: 'underline' }}>{p.link}</a></div>
                       )}
                     </div>
-                  </motion.div>
-                ))}
-              </Section>
-            </motion.div>
-          )}
-
-          {activeSection === 'experience' && (
-            <motion.div key="experience" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
-              <Section>
-                <div className="t-prompt">omphile@portfolio:~$ <span className="t-green">cat experience.log</span></div>
-                <br />
-                {data.experience.map((e, i) => (
-                  <motion.div key={i} className="t-exp" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.1 }}>
-                    <div className="t-line"><span className="t-green">[{e.period}]</span> <span className="t-white">{e.role}</span></div>
-                    <div className="t-line t-dim">  company: {e.company} · {e.location}</div>
-                    <br />
-                    {e.points.map((pt, j) => (
-                      <div key={j} className="t-line t-dim">  + {pt}</div>
-                    ))}
                   </motion.div>
                 ))}
               </Section>
