@@ -83,11 +83,20 @@ export default function MusicWidget() {
   const progressRef = useRef(null)
   const startProgressLoop = useCallback(() => {
     cancelAnimationFrame(progressRef.current)
+    const currentIdxRef = { current: 0 }
     const tick = () => {
       try {
         if (playerRef.current?.getCurrentTime && playerRef.current?.getDuration) {
           setProgress(playerRef.current.getCurrentTime())
           setDuration(playerRef.current.getDuration())
+          // Sync track index from YouTube player when next/prev is clicked
+          if (playerRef.current.getCurrentIndex) {
+            const idx = playerRef.current.getCurrentIndex()
+            if (typeof idx === 'number' && idx !== currentIdxRef.current) {
+              currentIdxRef.current = idx
+              setCurrent(idx)
+            }
+          }
         }
       } catch (_) {}
       progressRef.current = requestAnimationFrame(tick)
