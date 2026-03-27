@@ -48,7 +48,7 @@ a { text-decoration: none; color: inherit; }
   top: 0;
   left: 0;
   height: 2.5px;
-  z-index: 99997;
+  z-index: 99995;
   transition: width 0.1s linear;
   transform-origin: left;
 }
@@ -88,7 +88,7 @@ a { text-decoration: none; color: inherit; }
   top: 0;
   left: 0;
   right: 0;
-  z-index: 9990;
+  z-index: 99990;
   background: rgba(10, 10, 10, 0.9);
   backdrop-filter: blur(16px);
   border-bottom: 0.5px solid rgba(74, 222, 128, 0.2);
@@ -350,8 +350,9 @@ a { text-decoration: none; color: inherit; }
 /* ============================================================ */
 /* TERMINAL THEME */
 /* ============================================================ */
-.t-wrap { background: #0a0a0a; min-height: 100vh; font-family: 'JetBrains Mono', monospace; color: #a3a3a3; padding-top: 52px; }
-.t-titlebar { background: #1a1a1a; padding: 10px 20px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #2a2a2a; position: sticky; top: 0; z-index: 10; }
+.t-wrap { background: #0a0a0a; min-height: 100vh; font-family: 'JetBrains Mono', monospace; color: #a3a3a3; padding-top: 52px; position: relative; overflow: hidden; }
+.t-content { position: relative; z-index: 1; }
+.t-titlebar { background: #1a1a1a; padding: 10px 20px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #2a2a2a; position: sticky; top: 0; z-index: 20; }
 .t-dots { display: flex; gap: 6px; }
 .t-dots span { width: 12px; height: 12px; border-radius: 50%; display: block; }
 .t-wintitle { font-size: 12px; color: #4a4a4a; margin: 0 auto; letter-spacing: 0.06em; }

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { data } from '../data'
+import MatrixBg from '../components/MatrixBg'
 
 /* ─── Live CLI Prompt ─── */
 function LiveTerminal() {
@@ -308,6 +309,8 @@ export default function Terminal() {
 
   return (
     <div className="t-wrap">
+      <MatrixBg />
+      <div className="t-content">
       <div className="t-titlebar">
         <div className="t-dots">
           <span style={{ background: '#ff5f57' }} />
@@ -429,6 +432,7 @@ export default function Terminal() {
           )}
         </AnimatePresence>
       </div>
+    </div>
     </div>
   )
 }
