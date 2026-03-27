@@ -31,7 +31,7 @@ function whenYtReady(cb) {
 // YOUR PLAYLIST — loaded directly from YouTube Music
 // ──────────────────────────────────────────────
 const YOUTUBE_PLAYLIST_ID = 'PLfvvdsuspW5JsE94MWUya5zZRsZTRy8qM'
-const YOUTUBE_API_KEY = 'AIzaSyCjE6ZvG8GErsU6Ic71nN92r7Z6Z2RG9Ww' // Public demo key — replace with your own
+const YOUTUBE_API_KEY = 'AIzaSyDtiorgcXIpHQr6mYlLfLRFlNiF-4JT5yE'
 
 async function fetchPlaylistTracks() {
   try {
