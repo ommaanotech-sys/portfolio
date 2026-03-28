@@ -445,6 +445,18 @@ export default function Terminal() {
                     <div className="t-line"><span className="t-yellow">GITHUB</span>   → <a href={data.githubUrl} className="t-blue" target="_blank" rel="noreferrer">{data.github}</a></div>
                     <div className="t-line"><span className="t-yellow">LOCATION</span> → <span className="t-white">{data.location}</span></div>
                     <br />
+                    <div className="t-line">
+                      <span className="t-yellow">CV</span>      →
+                      <a
+                        href="mailto:ommaanotech@gmail.com?subject=Requesting CV"
+                        className="t-blue"
+                        style={{ textDecoration: 'underline' }}
+                      >
+                        Request via email
+                      </a>
+                      <span className="t-dim"> — or upload your CV.pdf to the repo</span>
+                    </div>
+                    <br />
                     <div className="t-line t-dim"># — or fill the form below —</div>
                     <br />
                     <ContactForm />
