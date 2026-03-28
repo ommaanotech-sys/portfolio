@@ -5,8 +5,8 @@
 @tailwind utilities;
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { min-height: 100vh; cursor: none; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
+body { min-height: 100vh; cursor: none; overflow-x: hidden; max-width: 100vw; }
 a { text-decoration: none; color: inherit; }
 
 /* ============================================================ */
@@ -352,6 +352,7 @@ a { text-decoration: none; color: inherit; }
 .theme-emoji { font-size: 11px; }
 
 /* ============================================================ */
+/* ============================================================ */
 /* 4D HOLOGRAPHIC SPECIMEN DISPLAY */
 /* ============================================================ */
 .p4-wrap {
@@ -644,7 +645,7 @@ a { text-decoration: none; color: inherit; }
 /* ============================================================ */
 /* TERMINAL THEME */
 /* ============================================================ */
-.t-wrap { background: #0a0a0a; min-height: 100vh; font-family: 'JetBrains Mono', monospace; color: #f0f0f0; padding-top: 52px; position: relative; overflow: hidden; }
+.t-wrap { background: #0a0a0a; min-height: 100vh; font-family: 'JetBrains Mono', monospace; color: #f0f0f0; padding-top: 52px; position: relative; overflow-x: hidden; }
 .t-content { position: relative; z-index: 1; padding-bottom: 60px; }
 .t-titlebar { background: #1a1a1a; padding: 10px 20px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #2a2a2a; position: sticky; top: 0; z-index: 20; }
 .t-dots { display: flex; gap: 6px; }
@@ -656,7 +657,7 @@ a { text-decoration: none; color: inherit; }
 .t-nav-btn.active { color: #4ade80; background: rgba(74,222,128,0.1); border-bottom: 1px solid #4ade80; }
 .t-body { padding: 24px; max-width: 860px; }
 .t-ascii { font-size: 9px; color: #1e3a1e; line-height: 1.3; margin-bottom: 20px; letter-spacing: 0.04em; white-space: pre; }
-.t-prompt { font-size: 14px; color: #d0d0d0; margin-bottom: 14px; }
+.t-prompt { font-size: 14px; color: #d0d0d0; margin-bottom: 14px; word-break: break-word; overflow-wrap: break-word; max-width: 100%; }
 .t-green { color: #4ade80; }
 .t-blue { color: #60a5fa; }
 .t-yellow { color: #f59e0b; }
@@ -665,7 +666,7 @@ a { text-decoration: none; color: inherit; }
 .t-cursor { display: inline-block; width: 8px; height: 14px; background: #4ade80; animation: tblink 1s infinite; vertical-align: middle; }
 @keyframes tblink { 0%,49%{opacity:1}50%,100%{opacity:0} }
 .t-output { margin-bottom: 24px; }
-.t-line { font-size: 12px; line-height: 2; }
+.t-line { font-size: 12px; line-height: 2; word-break: break-word; overflow-wrap: break-word; }
 .t-skill-row { display: flex; align-items: center; font-size: 12px; margin-bottom: 6px; }
 .t-skill-name { color: #c8c8c8; min-width: 120px; flex-shrink: 0; }
 .t-skill-label { font-size: 9px; color: #4a8a4a; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.04em; margin-left: 6px; }
@@ -687,10 +688,10 @@ a { text-decoration: none; color: inherit; }
 }
 .t-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
 .t-tag { font-size: 10px; padding: 4px 10px; border: 1px solid #1e3a1e; color: #4ade80; border-radius: 2px; }
-.t-project { margin-bottom: 20px; transition: all 0.25s; }
+.t-project { margin-bottom: 20px; transition: all 0.25s; word-break: break-word; overflow-wrap: break-word; }
 .t-project:hover { filter: brightness(1.15); text-shadow: 0 0 8px rgba(74,222,128,0.15); }
-.t-project-header { font-size: 12px; margin-bottom: 4px; }
-.t-project-body { border-left: 2px solid #1e3a1e; padding-left: 12px; transition: border-color 0.25s; }
+.t-project-header { font-size: 12px; margin-bottom: 4px; word-break: break-word; }
+.t-project-body { border-left: 2px solid #1e3a1e; padding-left: 12px; transition: border-color 0.25s; word-break: break-word; }
 .t-project:hover .t-project-body { border-left-color: #4ade80; }
 .t-exp { margin-bottom: 24px; }
 
@@ -705,10 +706,11 @@ a { text-decoration: none; color: inherit; }
   flex: 1; background: transparent; border: none; outline: none;
   font-family: 'JetBrains Mono', monospace; font-size: 12px;
   color: #e5e5e5; caret-color: #4ade80;
+  word-break: break-word; overflow-wrap: break-word; max-width: 100%;
 }
 .t-cli-history { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
-.t-cli-hist-cmd { color: #f59e0b; font-size: 12px; line-height: 1.8; }
-.t-cli-hist-out { color: #7aaa7a; font-size: 12px; line-height: 1.8; white-space: pre-wrap; padding-left: 0; }
+.t-cli-hist-cmd { color: #f59e0b; font-size: 12px; line-height: 1.8; word-break: break-word; overflow-wrap: break-word; }
+.t-cli-hist-out { color: #7aaa7a; font-size: 12px; line-height: 1.8; white-space: pre-wrap; padding-left: 0; word-break: break-word; overflow-wrap: break-word; }
 .t-cli-processing { color: #6a8a6a !important; display: flex; align-items: center; gap: 4px; }
 .t-proc-dots::after { content: '...'; animation: proc-blink 0.8s steps(4) infinite; }
 @keyframes proc-blink {
@@ -1060,9 +1062,11 @@ a { text-decoration: none; color: inherit; }
   .t-skill-block { width: 15px !important; height: 20px !important; }
   .t-skill-label { font-size: 12px !important; margin-left: 0 !important; }
   .t-cli-boot { font-size: 13px !important; line-height: 1.8 !important; }
-  .t-cli-input { font-size: 14px !important; }
+  .t-cli-input { font-size: 14px !important; max-width: 100% !important; }
   .t-cli-hist-cmd { font-size: 14px !important; }
   .t-cli-hist-out { font-size: 13px !important; }
+  .t-cli-input-row { font-size: 11px !important; gap: 4px !important; }
+  .t-cli-input-row .t-prompt-label { font-size: 11px !important; white-space: normal !important; }
   .t-form { gap: 12px !important; }
   .t-form-field label { font-size: 13px !important; }
   .t-form-field input, .t-form-field textarea { font-size: 15px !important; padding: 11px 14px !important; }
@@ -1110,7 +1114,7 @@ a { text-decoration: none; color: inherit; }
 }
 
 /* ============================================================ */
-/* MOBILE FIX — overrides previous broken mobile rules */
+/* MOBILE FIX ï¿½ overrides previous broken mobile rules */
 /* ============================================================ */
 @media (max-width: 600px) {
   /* Header: sticky below music bar (52px) */
