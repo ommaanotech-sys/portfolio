@@ -1024,7 +1024,8 @@ a { text-decoration: none; color: inherit; }
 @media (max-width: 600px) {
   /* Terminal theme — bigger text on mobile */
   .t-body { padding: 18px 16px !important; }
-  /* Sticky nav sits flush below music bar — no gap */
+  /* Fixed header: music bar (52px) + titlebar + nav stack flush */
+  .t-wrap { padding-top: 0 !important; }
   .t-titlebar {
     position: fixed !important;
     top: 52px !important;
@@ -1039,6 +1040,8 @@ a { text-decoration: none; color: inherit; }
     right: 0 !important;
     z-index: 99988 !important;
   }
+  /* Body starts below fixed header (~130px), no extra padding needed */
+  .t-body { padding: 130px 16px 24px !important; }
   .t-wintitle { font-size: 12px !important; }
   .t-nav-btn { padding: 11px 16px !important; font-size: 14px !important; letter-spacing: 0.04em !important; }
   .t-prompt { font-size: 14px !important; margin-bottom: 16px !important; }
