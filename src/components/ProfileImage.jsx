@@ -1,40 +1,29 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 
 export default function ProfileImage() {
-  const wrapRef = useRef(null)
   const [mouse, setMouse] = useState({ x: 0, y: 0 })
   const [tilt, setTilt] = useState({ x: 0, y: 0 })
   const [scale, setScale] = useState(1)
   const [isDragging, setIsDragging] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
-  const lastTouch = useRef({ x: 0, y: 0 })
-  const rafRef = useRef(null)
+  const [ripples, setRipples] = useState([])
+  const containerRef = useRef(null)
+  const lastMouse = useRef({ x: 0, y: 0 })
   const smoothTilt = useRef({ x: 0, y: 0 })
+  const velRef = useRef({ x: 0, y: 0 })
+  const rafRef = useRef(null)
 
-  // Smooth 3D tilt tracking
-  const updateTilt = useCallback((clientX, clientY) => {
-    if (!wrapRef.current) return
-    const rect = wrapRef.current.getBoundingClientRect()
-    const cx = rect.left + rect.width / 2
-    const cy = rect.top + rect.height / 2
-    const dx = (clientX - cx) / (rect.width / 2)
-    const dy = (clientY - cy) / (rect.height / 2)
-    // Target tilt: max ±15 degrees
-    smoothTilt.current = {
-      x: dx * 15,
-      y: -dy * 15,
-    }
-  }, [])
+  const imgUrl = `https://raw.githubusercontent.com/ommaanotech-sys/portfolio/main/High_DA20975-080.jpg`
 
-  // RAF loop for silky smooth tilt
+  // ── Smooth 4D tilt with inertia ──
   useEffect(() => {
     let raf
     const loop = () => {
       const tx = smoothTilt.current.x
       const ty = smoothTilt.current.y
       setTilt(prev => ({
-        x: prev.x + (tx - prev.x) * 0.08,
-        y: prev.y + (ty - prev.y) * 0.08,
+        x: prev.x + (tx - prev.x) * 0.06,
+        y: prev.y + (ty - prev.y) * 0.06,
       }))
       raf = requestAnimationFrame(loop)
     }
@@ -42,182 +31,258 @@ export default function ProfileImage() {
     return () => cancelAnimationFrame(raf)
   }, [])
 
-  const handleMouseMove = (e) => {
-    setMouse({ x: e.clientX, y: e.clientY })
-    if (!isDragging) {
-      updateTilt(e.clientX, e.clientY)
+  const handleMouseMove = useCallback((e) => {
+    if (!containerRef.current) return
+    const rect = containerRef.current.getBoundingClientRect()
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + rect.height / 2
+    const dx = (e.clientX - cx) / (rect.width / 2)
+    const dy = (e.clientY - cy) / (rect.height / 2)
+
+    // Velocity for momentum
+    velRef.current = {
+      x: e.clientX - lastMouse.current.x,
+      y: e.clientY - lastMouse.current.y,
     }
-  }
+    lastMouse.current = { x: e.clientX, y: e.clientY }
 
-  const handleMouseLeave = () => {
-    smoothTilt.current = { x: 0, y: 0 }
-  }
+    // Target tilt — smoothTilt drives the RAF loop above
+    smoothTilt.current = { x: dx * 22, y: -dy * 22 }
 
-  // Scroll to zoom
-  const handleWheel = (e) => {
-    e.preventDefault()
-    const delta = e.deltaY > 0 ? -0.2 : 0.2
-    setScale(s => Math.min(Math.max(s + delta, 0.5), 5))
-    if (isDragging) {
+    if (!isDragging) {
+      setMouse({ x: e.clientX, y: e.clientY })
       setPosition(p => ({
-        x: p.x + e.deltaX * 0.5,
-        y: p.y + e.deltaY * 0.5,
+        x: p.x + velRef.current.x * 0.3,
+        y: p.y + velRef.current.y * 0.3,
       }))
     }
-  }
+  }, [isDragging])
 
-  // Drag to pan
-  const handleMouseDown = (e) => {
+  // Inertia on mouse leave
+  const handleMouseLeave = useCallback(() => {
+    smoothTilt.current = { x: 0, y: 0 }
+    velRef.current = { x: 0, y: 0 }
+  }, [])
+
+  // ── Scroll to zoom ──
+  const handleWheel = useCallback((e) => {
+    e.preventDefault()
+    const delta = e.deltaY > 0 ? -0.25 : 0.25
+    setScale(s => Math.min(Math.max(s + delta, 0.4), 6))
+    if (scale > 1) {
+      setPosition(p => ({
+        x: p.x - e.deltaX * 0.4,
+        y: p.y - e.deltaY * 0.4,
+      }))
+    }
+  }, [scale])
+
+  // ── Drag to pan ──
+  const handleMouseDown = useCallback((e) => {
     if (scale > 1) {
       setIsDragging(true)
-      lastTouch.current = { x: e.clientX - position.x, y: e.clientY - position.y }
+    } else {
+      // Click ripple
+      const rect = containerRef.current.getBoundingClientRect()
+      const x = (e.clientX - rect.left) / rect.width
+      const y = (e.clientY - rect.top) / rect.height
+      const id = Date.now()
+      setRipples(prev => [...prev, { id, x, y }])
+      setTimeout(() => setRipples(prev => prev.filter(r => r.id !== id)), 800)
     }
-  }
+  }, [scale])
 
-  const handleMouseMoveDrag = (e) => {
+  const handleMouseMoveDrag = useCallback((e) => {
     if (!isDragging) return
     setPosition({
-      x: e.clientX - lastTouch.current.x,
-      y: e.clientY - lastTouch.current.y,
+      x: e.clientX - lastMouse.current.x,
+      y: e.clientY - lastMouse.current.y,
     })
-  }
+    lastMouse.current = { x: e.clientX, y: e.clientY }
+  }, [isDragging])
 
-  const handleMouseUp = () => setIsDragging(false)
-
-  const handleTouchStart = (e) => {
-    if (scale > 1 && e.touches.length === 1) {
-      setIsDragging(true)
-      lastTouch.current = {
-        x: e.touches[0].clientX - position.x,
-        y: e.touches[0].clientY - position.y,
-      }
-    }
-  }
-
-  const handleTouchMove = (e) => {
-    if (!isDragging || e.touches.length !== 1) return
-    e.preventDefault()
-    setPosition({
-      x: e.touches[0].clientX - lastTouch.current.x,
-      y: e.touches[0].clientY - lastTouch.current.y,
-    })
-  }
-
-  const handleTouchEnd = () => setIsDragging(false)
-
-  const handleDoubleClick = () => {
-    setScale(1)
-    setPosition({ x: 0, y: 0 })
+  const handleMouseUp = useCallback(() => setIsDragging(false), [])
+  const handleDoubleClick = useCallback(() => {
+    setScale(1); setPosition({ x: 0, y: 0 })
     smoothTilt.current = { x: 0, y: 0 }
-  }
+  }, [])
 
-  const imgUrl = `https://raw.githubusercontent.com/ommaanotech-sys/portfolio/main/High_DA20975-080.jpg`
+  // Mouse in viewport for displacement
+  const rect = containerRef.current?.getBoundingClientRect()
+  const relX = rect ? ((mouse.x - rect.left) / rect.width - 0.5) * 2 : 0
+  const relY = rect ? ((mouse.y - rect.top) / rect.height - 0.5) * 2 : 0
 
-  // Generate corner markers
-  const corners = ['tl', 'tr', 'bl', 'br']
+  const cursorInside = rect
+    && mouse.x > rect.left && mouse.x < rect.right
+    && mouse.y > rect.top && mouse.y < rect.bottom
 
   return (
-    <div className="pwrap" ref={wrapRef}>
-      {/* Scanlines overlay */}
-      <div className="p-scanlines" />
+    <div className="p4-wrap">
 
       {/* Header */}
-      <div className="p-header">
-        <div className="p-dots">
-          <span /><span /><span />
+      <div className="p4-header">
+        <div className="p4-dots"><span /><span /><span /></div>
+        <div className="p4-title">IMG_SPECIMEN_v2.4</div>
+        <div className="p4-live">
+          <span className="p4-blink" />LIVE
         </div>
-        <div className="p-title">SPECIMEN // PHOTO.IMG</div>
-        <div className="p-hash">#{Math.floor(Math.random() * 9999).toString().padStart(4, '0')}</div>
       </div>
 
-      {/* 3D Viewport */}
+      {/* Holographic viewport */}
       <div
-        className="p-viewport"
+        ref={containerRef}
+        className="p4-viewport"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onWheel={handleWheel}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMoveDrag}
         onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
         onDoubleClick={handleDoubleClick}
-        style={{ cursor: scale > 1 ? (isDragging ? 'grabbing' : 'grab') : 'crosshair' }}
       >
-        {/* Corner decorations */}
-        {corners.map(c => (
-          <div key={c} className={`p-corner p-corner-${c}`}>
-            <div className="p-corner-line" />
-            <div className="p-corner-line" />
-          </div>
-        ))}
 
-        {/* Crosshair */}
-        <div className="p-crosshair">
-          <div className="p-ch-h" />
-          <div className="p-ch-v" />
-          <div className="p-ch-dot" />
-        </div>
-
-        {/* Floating data labels */}
-        <div className="p-label p-label-t" style={{ opacity: 0.4 + Math.abs(tilt.y) * 0.03 }}>
-          YAW: {tilt.x.toFixed(1)}°
-        </div>
-        <div className="p-label p-label-b" style={{ opacity: 0.4 + Math.abs(tilt.y) * 0.03 }}>
-          PITCH: {tilt.y.toFixed(1)}°
-        </div>
-
-        {/* Image with 3D transforms */}
+        {/* 4D Image Container */}
         <div
-          className="p-img-container"
+          className="p4-img-container"
           style={{
             transform: `
-              perspective(800px)
-              rotateX(${tilt.y}deg)
-              rotateY(${tilt.x}deg)
+              perspective(600px)
+              rotateX(${tilt.y * 0.7}deg)
+              rotateY(${tilt.x * 0.7}deg)
               scale(${scale})
-              translate(${position.x / scale}px, ${position.y / scale}px)
+              translate(${(position.x / scale) * 0.3}px, ${(position.y / scale) * 0.3}px)
             `,
-            transition: isDragging ? 'none' : 'transform 0.05s ease-out',
+            transition: isDragging ? 'none' : 'transform 0.05s linear',
           }}
         >
           <img
             src={imgUrl}
-            alt="Profile"
-            className="p-img"
+            alt="SPECIMEN"
+            className="p4-img"
             draggable={false}
+            style={{
+              transform: `
+                translate(${relX * -12}px, ${relY * -12}px)
+                scale(${1 + Math.abs(relX) * 0.04})
+                scaleY(${1 + Math.abs(relY) * 0.02})
+              `,
+              filter: `
+                saturate(0.3)
+                contrast(1.3)
+                brightness(0.85)
+                hue-rotate(${relX * 15}deg)
+              `,
+              transition: 'filter 0.1s',
+            }}
           />
-          {/* Green tint overlay */}
-          <div className="p-tint" />
-          {/* Glitch lines on movement */}
-          {Math.abs(tilt.x) + Math.abs(tilt.y) > 3 && (
-            <div className="p-glitch" />
+
+          {/* Green phosphor tint */}
+          <div className="p4-phosphor" />
+
+          {/* Light leak from cursor */}
+          {cursorInside && (
+            <div
+              className="p4-light-leak"
+              style={{
+                background: `radial-gradient(circle 120px at ${relX * 50 + 50}% ${relY * 50 + 50}%, rgba(74,222,128,0.18) 0%, transparent 70%)`,
+              }}
+            />
           )}
+
+          {/* Chromatic aberration edges */}
+          <img
+            src={imgUrl}
+            alt=""
+            className="p4-img p4-chromatic-r"
+            draggable={false}
+            style={{
+              transform: `translate(${relX * -8 + (position.x / scale) * 0.3}px, ${relY * -8 + (position.y / scale) * 0.3}px) scale(${scale * (1 + Math.abs(relX) * 0.04)})`,
+              filter: 'saturate(0.1) contrast(1.5) brightness(0.9) hue-rotate(90deg)',
+              clipPath: 'inset(0 50% 0 0)',
+              opacity: 0.4,
+            }}
+          />
+          <img
+            src={imgUrl}
+            alt=""
+            className="p4-img p4-chromatic-b"
+            draggable={false}
+            style={{
+              transform: `translate(${relX * 8 + (position.x / scale) * 0.3}px, ${relY * 8 + (position.y / scale) * 0.3}px) scale(${scale * (1 + Math.abs(relX) * 0.04)})`,
+              filter: 'saturate(0.1) contrast(1.5) brightness(0.9) hue-rotate(-90deg)',
+              clipPath: 'inset(0 0 0 50%)',
+              opacity: 0.4,
+            }}
+          />
+
+          {/* Scanlines */}
+          <div className="p4-scanlines" />
+
+          {/* Ripple effects */}
+          {ripples.map(r => (
+            <div
+              key={r.id}
+              className="p4-ripple"
+              style={{
+                left: `${r.x * 100}%`,
+                top: `${r.y * 100}%`,
+              }}
+            />
+          ))}
+
+          {/* Noise grain overlay */}
+          <div className="p4-noise" />
+        </div>
+
+        {/* Holographic reflection */}
+        <div
+          className="p4-reflection"
+          style={{
+            transform: `perspective(600px) rotateX(${tilt.y * 0.3}deg) scaleY(-0.3)`,
+            opacity: 0.08 + Math.abs(relY) * 0.06,
+            filter: `blur(3px) brightness(0.5) hue-rotate(${relX * 20}deg)`,
+          }}
+        >
+          <img src={imgUrl} alt="" className="p4-img" draggable={false} />
+        </div>
+
+        {/* Corner brackets */}
+        {['tl','tr','bl','br'].map(c => (
+          <div key={c} className={`p4-corner p4-corner-${c}`} />
+        ))}
+
+        {/* Data readout */}
+        <div className="p4-data">
+          <span>YAW <em>{tilt.x.toFixed(1)}°</em></span>
+          <span>PITCH <em>{tilt.y.toFixed(1)}°</em></span>
+          <span>ZOOM <em>{Math.round(scale * 100)}%</em></span>
+        </div>
+
+        {/* Crosshair */}
+        <div className="p4-crosshair">
+          <div className="p4-ch-h" style={{ opacity: 0.15 + Math.abs(relX) * 0.1 }} />
+          <div className="p4-ch-v" style={{ opacity: 0.15 + Math.abs(relY) * 0.1 }} />
         </div>
 
         {/* CRT vignette */}
-        <div className="p-vignette" />
+        <div className="p4-vignette" />
       </div>
 
-      {/* Controls */}
-      <div className="p-footer">
-        <div className="p-stat">
-          <span className="p-stat-label">ZOOM</span>
-          <span className="p-stat-val">{Math.round(scale * 100)}%</span>
+      {/* Footer */}
+      <div className="p4-footer">
+        <div className="p4-stat">
+          <span className="p4-sl">MODE</span><span className="p4-sv">4D_HOLO</span>
         </div>
-        <div className="p-stat">
-          <span className="p-stat-label">MODE</span>
-          <span className="p-stat-val">LIVE_3D</span>
+        <div className="p4-stat">
+          <span className="p4-sl">DISP</span><span className="p4-sv">{cursorInside ? 'ACTIVE' : 'IDLE'}</span>
         </div>
-        <div className="p-stat">
-          <span className="p-stat-label">STATUS</span>
-          <span className="p-stat-val p-live">● LIVE</span>
+        <div className="p4-stat">
+          <span className="p4-sl">SYS</span>
+          <span className="p4-sv p4-sys">{`${Math.floor(Math.random()*40)+80}MHz`}</span>
         </div>
       </div>
 
-      <div className="p-hint">SCROLL: ZOOM · DRAG: PAN · DBLCLICK: RESET</div>
+      <div className="p4-hint">MOVE: TILT · SCROLL: ZOOM · CLICK: RIPPLE · DBL: RESET</div>
     </div>
   )
 }
