@@ -2,7 +2,7 @@
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { data } from '../data'
 import RotatingCube from '../components/RotatingCube'
-import HoloVisualizer from '../components/HoloVisualizer'
+
 
 /* ─── Live CLI Prompt ─── */
 function LiveTerminal() {
@@ -287,7 +287,7 @@ function ContactForm() {
 /* ─── Main Terminal ─── */
 export default function Terminal() {
   const [activeSection, setActiveSection] = useState('about')
-  const sections = ['about', 'skills', 'projects', 'credentials', 'contact', 'visualizer']
+  const sections = ['about', 'skills', 'projects', 'credentials', 'contact']
   const CV_URL = 'https://raw.githubusercontent.com/ommaanotech-sys/portfolio/main/Omphile_Molefe%20Maano.pdf'
 
   return (
