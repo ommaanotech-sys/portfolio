@@ -640,24 +640,24 @@ a { text-decoration: none; color: inherit; }
 /* ============================================================ */
 /* TERMINAL THEME */
 /* ============================================================ */
-.t-wrap { background: #0a0a0a; min-height: 100vh; font-family: 'JetBrains Mono', monospace; color: #d4d4d4; padding-top: 52px; position: relative; overflow: hidden; }
+.t-wrap { background: #0a0a0a; min-height: 100vh; font-family: 'JetBrains Mono', monospace; color: #f0f0f0; padding-top: 52px; position: relative; overflow: hidden; }
 .t-content { position: relative; z-index: 1; padding-bottom: 60px; }
 .t-titlebar { background: #1a1a1a; padding: 10px 20px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #2a2a2a; position: sticky; top: 0; z-index: 20; }
 .t-dots { display: flex; gap: 6px; }
 .t-dots span { width: 12px; height: 12px; border-radius: 50%; display: block; }
-.t-wintitle { font-size: 12px; color: #6a8a6a; margin: 0 auto; letter-spacing: 0.06em; }
+.t-wintitle { font-size: 12px; color: #c0c0c0; margin: 0 auto; letter-spacing: 0.06em; }
 .t-nav { display: flex; gap: 0; border-bottom: 1px solid #1a1a1a; background: rgba(10,10,10,0.85); overflow-x: auto; backdrop-filter: blur(8px); }
-.t-nav-btn { background: none; border: none; padding: 10px 18px; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: #5a7a5a; cursor: pointer; letter-spacing: 0.06em; border-right: 1px solid #1a1a1a; transition: all 0.15s; white-space: nowrap; }
+.t-nav-btn { background: none; border: none; padding: 10px 18px; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: #b0b0b0; cursor: pointer; letter-spacing: 0.06em; border-right: 1px solid #1a1a1a; transition: all 0.15s; white-space: nowrap; }
 .t-nav-btn:hover { color: #6fcf6f; background: rgba(74,222,128,0.06); }
 .t-nav-btn.active { color: #4ade80; background: rgba(74,222,128,0.1); border-bottom: 1px solid #4ade80; }
 .t-body { padding: 24px; max-width: 860px; }
 .t-ascii { font-size: 9px; color: #1e3a1e; line-height: 1.3; margin-bottom: 20px; letter-spacing: 0.04em; white-space: pre; }
-.t-prompt { font-size: 13px; color: #6a8a6a; margin-bottom: 12px; }
+.t-prompt { font-size: 14px; color: #d0d0d0; margin-bottom: 14px; }
 .t-green { color: #4ade80; }
 .t-blue { color: #60a5fa; }
 .t-yellow { color: #f59e0b; }
-.t-white { color: #e8e8e8; }
-.t-dim { color: #5a7a5a; }
+.t-white { color: #f0f0f0; }
+.t-dim { color: #8a8a8a; }
 .t-cursor { display: inline-block; width: 8px; height: 14px; background: #4ade80; animation: tblink 1s infinite; vertical-align: middle; }
 @keyframes tblink { 0%,49%{opacity:1}50%,100%{opacity:0} }
 .t-output { margin-bottom: 24px; }
@@ -692,7 +692,7 @@ a { text-decoration: none; color: inherit; }
 
 /* Live Terminal Prompt */
 .t-cli { display: flex; flex-direction: column; gap: 2px; }
-.t-cli-boot { font-size: 11px; color: #6a8a6a; line-height: 1.8; }
+.t-cli-boot { font-size: 13px; color: #e0e0e0; line-height: 1.8; letter-spacing: 0.03em; }
 .t-cli-boot span { color: #4ade80; }
 .t-cli-output { font-size: 12px; line-height: 2; white-space: pre-wrap; word-break: break-word; }
 .t-cli-input-row { display: flex; align-items: center; font-size: 12px; }
@@ -709,9 +709,9 @@ a { text-decoration: none; color: inherit; }
 /* Contact Form */
 .t-form { display: flex; flex-direction: column; gap: 10px; max-width: 480px; }
 .t-form-field { display: flex; flex-direction: column; gap: 4px; }
-.t-form-field label { font-size: 10px; color: #6a8a6a; text-transform: uppercase; letter-spacing: 0.1em; }
+.t-form-field label { font-size: 10px; color: #a0a0a0; text-transform: uppercase; letter-spacing: 0.1em; }
 .t-form-field input, .t-form-field textarea {
-  background: rgba(20,20,20,0.85); border: 1px solid #1e3a1e; color: #e5e5e5;
+  background: rgba(20,20,20,0.85); border: 1px solid #1e3a1e; color: #f0f0f0;
   font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 8px 12px;
   outline: none; transition: border-color 0.2s; resize: vertical;
 }
@@ -1016,23 +1016,29 @@ a { text-decoration: none; color: inherit; }
 /* MOBILE GLOBAL — all breakpoints */
 /* ============================================================ */
 @media (max-width: 600px) {
-  /* Terminal theme */
-  .t-body { padding: 14px !important; }
-  .t-skill-row { flex-wrap: wrap !important; row-gap: 4px; }
-  .t-skill-name { min-width: 0 !important; font-size: 11px !important; flex: 0 0 100%; }
-  .t-skill-bar { max-width: 100% !important; width: 100% !important; font-size: 10px !important; display: block !important; overflow: hidden !important; }
-  .t-skill-label { margin-left: 0 !important; }
-  .t-nav-btn { padding: 8px 12px !important; font-size: 11px !important; }
-  .t-titlebar { padding: 8px 12px !important; }
-  .t-project-header { font-size: 11px !important; }
-  .t-line { font-size: 11px !important; }
-  .t-prompt { font-size: 11px !important; }
-  .t-cli-boot { font-size: 10px !important; }
-  .t-cli-input { font-size: 11px !important; }
-  .t-cli-hist-cmd { font-size: 11px !important; }
-  .t-cli-hist-out { font-size: 11px !important; }
-  .t-form { gap: 8px !important; }
-  .t-form-field input, .t-form-field textarea { font-size: 11px !important; padding: 7px 10px !important; }
+  /* Terminal theme — bigger text on mobile */
+  .t-body { padding: 18px 16px !important; }
+  .t-titlebar { padding: 12px 16px !important; }
+  .t-wintitle { font-size: 12px !important; }
+  .t-nav-btn { padding: 11px 16px !important; font-size: 14px !important; letter-spacing: 0.04em !important; }
+  .t-prompt { font-size: 14px !important; margin-bottom: 16px !important; }
+  .t-line { font-size: 14px !important; line-height: 1.7 !important; }
+  .t-project-header { font-size: 14px !important; }
+  .t-project-body { font-size: 13px !important; }
+  .t-tags { gap: 8px !important; }
+  .t-tag { font-size: 13px !important; padding: 5px 12px !important; }
+  .t-skill-row { flex-wrap: wrap !important; row-gap: 10px !important; margin-bottom: 14px !important; }
+  .t-skill-name { min-width: 0 !important; font-size: 15px !important; flex: 0 0 100%; color: #f0f0f0 !important; }
+  .t-skill-blocks { gap: 4px !important; }
+  .t-skill-block { width: 15px !important; height: 20px !important; }
+  .t-skill-label { font-size: 12px !important; margin-left: 0 !important; }
+  .t-cli-boot { font-size: 13px !important; line-height: 1.8 !important; }
+  .t-cli-input { font-size: 14px !important; }
+  .t-cli-hist-cmd { font-size: 14px !important; }
+  .t-cli-hist-out { font-size: 13px !important; }
+  .t-form { gap: 12px !important; }
+  .t-form-field label { font-size: 13px !important; }
+  .t-form-field input, .t-form-field textarea { font-size: 15px !important; padding: 11px 14px !important; }
 
   /* Music bar mobile */
   .mw-bar-title { font-size: 12px !important; text-overflow: ellipsis !important; overflow: hidden !important; white-space: nowrap !important; max-width: 120px !important; }
