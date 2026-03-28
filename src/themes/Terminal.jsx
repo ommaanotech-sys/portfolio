@@ -321,8 +321,8 @@ export default function Terminal() {
                 <div className="flex-1 min-w-0">
                   <LiveTerminal />
                 </div>
-                {/* Cube — right on desktop, bottom on mobile */}
-                <div className="flex flex-shrink-0 items-center justify-center" style={{ width: '100%', height: 220 }}>
+                {/* Cube — right on desktop, hidden on mobile */}
+                <div className="hidden md:flex flex-shrink-0 items-center justify-center" style={{ width: 220, height: 220 }}>
                   <RotatingCube />
                 </div>
               </div>
