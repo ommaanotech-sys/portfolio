@@ -696,10 +696,10 @@ a { text-decoration: none; color: inherit; }
 .t-exp { margin-bottom: 8px; }
 
 /* Live Terminal Prompt */
-.t-cli { display: flex; flex-direction: column; gap: 2px; overflow-x: auto; }
+.t-cli { display: flex; flex-direction: column; gap: 2px; overflow-x: auto; min-width: 0; width: 100%; box-sizing: border-box; }
 .t-cli-boot { font-size: 13px; color: #e0e0e0; line-height: 1.8; letter-spacing: 0.03em; white-space: pre; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .t-cli-output { font-size: 12px; line-height: 2; white-space: pre-wrap; word-break: break-word; }
-.t-cli-input-row { display: flex; align-items: center; font-size: 12px; }
+.t-cli-input-row { display: flex; align-items: center; font-size: 12px; flex-wrap: nowrap; }
 .t-cli-input-row .t-prompt-label { color: #4ade80; margin-right: 8px; white-space: nowrap; }
 .t-cli-input {
   flex: 1; background: transparent; border: none; outline: none;
@@ -1063,11 +1063,12 @@ a { text-decoration: none; color: inherit; }
   .t-skill-block { width: 13px !important; height: 18px !important; }
   .t-skill-label { font-size: 12px !important; margin-left: 0 !important; }
   .t-cli-boot { font-size: 12px !important; line-height: 1.5 !important; }
-  .t-cli-input { font-size: 16px !important; max-width: 100% !important; }
+  .t-cli { width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; overflow-x: auto !important; }
+  .t-cli-input { font-size: 16px !important; max-width: 100% !important; flex: 1 1 auto !important; }
   .t-cli-hist-cmd { font-size: 15px !important; }
   .t-cli-hist-out { font-size: 14px !important; }
-  .t-cli-input-row { font-size: 12px !important; gap: 4px !important; }
-  .t-cli-input-row .t-prompt-label { font-size: 12px !important; white-space: normal !important; }
+  .t-cli-input-row { font-size: 12px !important; gap: 4px !important; flex-wrap: wrap !important; width: 100% !important; box-sizing: border-box !important; min-width: 0 !important; }
+  .t-cli-input-row .t-prompt-label { font-size: 12px !important; white-space: normal !important; flex: 0 0 auto !important; word-break: break-word !important; }
   .t-form { gap: 8px !important; }
   .t-form-field label { font-size: 12px !important; }
   .t-form-field input, .t-form-field textarea { font-size: 15px !important; padding: 10px 12px !important; }
