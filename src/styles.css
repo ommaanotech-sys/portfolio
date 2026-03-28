@@ -705,6 +705,12 @@ a { text-decoration: none; color: inherit; }
 .t-cli-history { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
 .t-cli-hist-cmd { color: #f59e0b; font-size: 12px; line-height: 1.8; }
 .t-cli-hist-out { color: #7aaa7a; font-size: 12px; line-height: 1.8; white-space: pre-wrap; padding-left: 0; }
+.t-cli-processing { color: #6a8a6a !important; display: flex; align-items: center; gap: 4px; }
+.t-proc-dots::after { content: '...'; animation: proc-blink 0.8s steps(4) infinite; }
+@keyframes proc-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
 
 /* Contact Form */
 .t-form { display: flex; flex-direction: column; gap: 10px; max-width: 480px; }

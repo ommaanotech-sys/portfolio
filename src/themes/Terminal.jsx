@@ -53,11 +53,26 @@ function LiveTerminal() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [history, bootLines])
 
+  const [processing, setProcessing] = useState(false)
+
   const runCommand = (raw) => {
     const cmd = raw.trim().toLowerCase()
     const out = getOutput(cmd)
     if (out === '__CLEAR__') { setHistory([]) }
-    else if (out !== null) { setHistory(prev => [...prev, { cmd: raw, out }]) }
+    else if (out !== null) {
+      setProcessing(true)
+      setHistory(prev => [...prev, { cmd: raw, out: null }])
+      setTimeout(() => {
+        setHistory(prev => {
+          const updated = [...prev]
+          // Replace the last entry (which has null out) with the actual result
+          const lastIdx = updated.length - 1
+          updated[lastIdx] = { cmd: raw, out }
+          return updated
+        })
+        setProcessing(false)
+      }, 3000)
+    }
     setCmdHistory(prev => [raw, ...prev])
     setCmdIdx(-1)
     setInput('')
@@ -142,7 +157,13 @@ Location: ${data.location}`
         {history.map((h, i) => (
           <div key={i}>
             <div className="t-cli-hist-cmd">omphile@portfolio:~$ {h.cmd}</div>
-            {h.out && <div className="t-cli-hist-out">{h.out}</div>}
+            {h.out === null ? (
+              <div className="t-cli-hist-out t-cli-processing">
+                <span>Processing</span><span className="t-proc-dots">...</span>
+              </div>
+            ) : (
+              <div className="t-cli-hist-out">{h.out}</div>
+            )}
           </div>
         ))}
 
