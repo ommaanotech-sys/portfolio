@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+﻿import { useState, useEffect, useRef } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { data } from '../data'
 import RotatingCube from '../components/RotatingCube'
@@ -314,7 +314,7 @@ export default function Terminal() {
       </div>
 
       <div className="t-body">
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
           {activeSection === 'about' && (
             <motion.div key="about" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
               <div className="flex flex-col md:flex-row items-start md:items-center gap-8">
