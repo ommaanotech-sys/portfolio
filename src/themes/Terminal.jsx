@@ -287,7 +287,7 @@ function ContactForm() {
 /* ─── Main Terminal ─── */
 export default function Terminal() {
   const [activeSection, setActiveSection] = useState('about')
-  const sections = ['about', 'skills', 'projects', 'credentials', 'contact']
+  const sections = ['about', 'skills', 'projects', 'credentials', 'contact', 'visualizer']
   const CV_URL = 'https://raw.githubusercontent.com/ommaanotech-sys/portfolio/main/Omphile_Molefe%20Maano.pdf'
 
   return (
@@ -314,19 +314,7 @@ export default function Terminal() {
         ))}
       </div>
 
-      {/* ── Background Audio Visualizer ── */}
-      <div style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 0,
-        opacity: 0.35,
-        pointerEvents: 'none',
-        mixBlendMode: 'screen',
-      }}>
-        <HoloVisualizer />
-      </div>
-
-      <div className="t-body" style={{ position: 'relative', zIndex: 1 }}>
+      <div className="t-body">
         <AnimatePresence>
           {activeSection === 'about' && (
             <motion.div key="about" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
