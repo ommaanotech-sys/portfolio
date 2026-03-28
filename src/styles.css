@@ -638,8 +638,9 @@ a { text-decoration: none; color: inherit; }
 
 @media (max-width: 800px) {
   .t-layout { flex-direction: column; padding: 0 14px 40px; gap: 16px; }
-  .t-right-panel { flex: none; width: 100%; position: static; max-height: none; }
-  .pimg-viewport { min-height: 240px; max-height: 320px; }
+  .t-right-panel { display: none !important; }
+  .t-content { width: 100% !important; max-width: 100% !important; }
+  .pimg-viewport { min-height: 240px; max-height: 320px; position: static !important; }
 }
 
 /* ============================================================ */
