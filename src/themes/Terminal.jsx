@@ -317,11 +317,12 @@ export default function Terminal() {
         <AnimatePresence>
           {activeSection === 'about' && (
             <motion.div key="about" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-8">
+              <div className="flex flex-col md:flex-row items-center gap-8">
                 <div className="flex-1 min-w-0">
                   <LiveTerminal />
                 </div>
-                <div className="hidden md:flex flex-shrink-0 items-center justify-center" style={{ width: 220, height: 220 }}>
+                {/* Cube — right on desktop, bottom on mobile */}
+                <div className="flex flex-shrink-0 items-center justify-center" style={{ width: '100%', height: 220 }}>
                   <RotatingCube />
                 </div>
               </div>
