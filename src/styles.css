@@ -1108,3 +1108,53 @@ a { text-decoration: none; color: inherit; }
 @media (min-width: 1200px) {
   .t-body { padding: 32px !important; max-width: 960px !important; margin: 0 auto; }
 }
+
+/* ============================================================ */
+/* MOBILE FIX — overrides previous broken mobile rules */
+/* ============================================================ */
+@media (max-width: 600px) {
+  /* Header: sticky below music bar (52px) */
+  .t-header {
+    position: sticky !important;
+    top: 52px !important;
+    z-index: 99989 !important;
+    background: #1a1a1a !important;
+    border-bottom: 1px solid #2a2a2a !important;
+  }
+  /* Body: clear music bar (52px) + header, no overflow */
+  .t-body {
+    padding: 142px 14px 24px !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    word-wrap: break-word !important;
+  }
+  /* Cards: no fixed width, respect parent */
+  .t-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+  }
+  /* Projects grid: single column on phone */
+  .t-projects-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  /* Nav buttons: compact */
+  .t-nav-btn {
+    padding: 10px 12px !important;
+    font-size: 11px !important;
+    flex-shrink: 0 !important;
+  }
+  /* Prompt text: smaller, break long words */
+  .t-prompt, .t-prompt span {
+    font-size: 12px !important;
+    word-break: break-all !important;
+    overflow-wrap: break-word !important;
+  }
+  /* Dim text: smaller */
+  .t-dim { font-size: 11px !important; }
+  /* Section text */
+  .t-white { font-size: 13px !important; }
+}
+
