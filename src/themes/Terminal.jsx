@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { data } from '../data'
-import MatrixBg from '../components/MatrixBg'
-import ProfileImage from '../components/ProfileImage'
 
 /* ─── Live CLI Prompt ─── */
 function LiveTerminal() {
@@ -310,7 +308,6 @@ export default function Terminal() {
 
   return (
     <div className="t-wrap">
-      <MatrixBg />
       <div className="t-layout">
         <div className="t-content">
 
@@ -438,10 +435,6 @@ export default function Terminal() {
 
         </div>
 
-        {/* Right side — zoomable profile image */}
-        <div className="t-right-panel">
-          <ProfileImage />
-        </div>
       </div>
     </div>
   )
