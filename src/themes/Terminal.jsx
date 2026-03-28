@@ -55,19 +55,36 @@ function LiveTerminal() {
 
   const [processing, setProcessing] = useState(false)
 
+  const CV_URL = 'https://raw.githubusercontent.com/ommaanotech-sys/portfolio/main/Omphile_Molefe%20Maano.pdf'
+
   const runCommand = (raw) => {
     const cmd = raw.trim().toLowerCase()
     const out = getOutput(cmd)
     if (out === '__CLEAR__') { setHistory([]) }
+    else if (out === '__DOWNLOAD_CV__') {
+      // Trigger download then show success after 2.5s
+      setHistory(prev => [...prev, { cmd: raw, out: null }])
+      setTimeout(() => {
+        window.open(CV_URL, '_blank')
+      }, 300)
+      setTimeout(() => {
+        setHistory(prev => {
+          const updated = [...prev]
+          updated[updated.length - 1] = {
+            cmd: raw,
+            out: `✓ Download started successfully.\n\nIf the download didn't start,\nclick the link: ${CV_URL.replace('raw.githubusercontent.com', 'github.com')}\nor request via email in the contact section.`
+          }
+          return updated
+        })
+      }, 2500)
+    }
     else if (out !== null) {
       setProcessing(true)
       setHistory(prev => [...prev, { cmd: raw, out: null }])
       setTimeout(() => {
         setHistory(prev => {
           const updated = [...prev]
-          // Replace the last entry (which has null out) with the actual result
-          const lastIdx = updated.length - 1
-          updated[lastIdx] = { cmd: raw, out }
+          updated[updated.length - 1] = { cmd: raw, out }
           return updated
         })
         setProcessing(false)
@@ -87,6 +104,8 @@ function LiveTerminal() {
   projects     → Featured projects
   credentials  → Certs & education
   contact      → Contact info
+  cv           → View CV info
+  download-cv  → Download CV (PDF)
   whoami       → Current user
   ls           → List sections
   date         → Current date/time
@@ -122,8 +141,14 @@ Location: ${data.location}`
 Phone:   ${data.phone}
 GitHub:  ${data.githubUrl}
 Location: ${data.location}`
+      case 'cv': return `CV — Omphile Molefe Maano
+Size:    PDF
+─────────────────────────────────────
+Run: download-cv
+to initiate download.`
+      case 'download-cv': return '__DOWNLOAD_CV__'
       case 'whoami': return 'omphile'
-      case 'ls': return 'about/  skills/  projects/  credentials/  contact/'
+      case 'ls': return 'about/  skills/  projects/  credentials/  contact/  cv/'
       case 'date': return new Date().toString()
       case 'clear': return '__CLEAR__'
       case 'theme': return 'Terminal Theme — omphile-portfolio v2.0\nStyle: Vintage Hacker CLI\nFont: JetBrains Mono'
@@ -448,13 +473,16 @@ export default function Terminal() {
                     <div className="t-line">
                       <span className="t-yellow">CV</span>      →
                       <a
-                        href="mailto:ommaanotech@gmail.com?subject=Requesting CV"
+                        href={CV_URL}
+                        target="_blank"
+                        rel="noreferrer"
                         className="t-blue"
                         style={{ textDecoration: 'underline' }}
                       >
-                        Request via email
+                        Download CV (PDF)
                       </a>
-                      <span className="t-dim"> — or upload your CV.pdf to the repo</span>
+                      <span className="t-dim"> — or type </span>
+                      <span className="t-green">download-cv</span>
                     </div>
                     <br />
                     <div className="t-line t-dim"># — or fill the form below —</div>
