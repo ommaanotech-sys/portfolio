@@ -167,10 +167,12 @@ Location: ${data.location}`
   )
 }
 
-/* ─── Skill bars with animated count-up ─── */
+/* ─── GitHub-style skill bars ─── */
 function SkillBar({ name, level, delay }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-60px' })
+  const filled = Math.round(level / 10)
+  const empty = 10 - filled
   const label =
     level >= 90 ? 'Expert' :
     level >= 78 ? 'Advanced' :
@@ -186,23 +188,22 @@ function SkillBar({ name, level, delay }) {
       transition={{ delay, duration: 0.4 }}
     >
       <span className="t-skill-name">{name}</span>
-      <SkillBarVisual level={level} isInView={isInView} />
-      <span className="t-green t-skill-label">{label}</span>
+      <div className="t-skill-blocks">
+        {Array.from({ length: filled }, (_, i) => (
+          <motion.span
+            key={i}
+            className="t-skill-block filled"
+            initial={{ scaleY: 0 }}
+            animate={isInView ? { scaleY: 1 } : {}}
+            transition={{ delay: delay + i * 0.05, duration: 0.25, ease: [0.34, 1.56, 0.64, 1] }}
+          />
+        ))}
+        {Array.from({ length: empty }, (_, i) => (
+          <span key={`e-${i}`} className="t-skill-block empty" />
+        ))}
+      </div>
+      <span className="t-skill-label">{label}</span>
     </motion.div>
-  )
-}
-
-function SkillBarVisual({ level, isInView }) {
-  const pct = Math.round(level / 10)
-  return (
-    <motion.span
-      className="t-skill-bar"
-      initial={{ width: 0 }}
-      animate={isInView ? { width: '100%' } : {}}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
-    >
-      {'█'.repeat(pct)}{'░'.repeat(10 - pct)}
-    </motion.span>
   )
 }
 
