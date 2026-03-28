@@ -333,12 +333,10 @@ export default function Terminal() {
           {activeSection === 'skills' && (
             <motion.div key="skills" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
               <div className="t-prompt">omphile@portfolio:~$ <span className="t-green">./skills --list --verbose</span></div>
-              <br />
               {data.skills.map((s, i) => (
                 <SkillBar key={s.name} name={s.name} level={s.level} delay={i * 0.06} />
               ))}
-              <br />
-              <div className="t-prompt">omphile@portfolio:~$ <span className="t-green">ls ./tech-stack/</span></div>
+              <div className="t-prompt mt-4">omphile@portfolio:~$ <span className="t-green">ls ./tech-stack/</span></div>
               <div className="t-tags">
                 {data.techTags.map(t => <span key={t} className="t-tag">{t}</span>)}
               </div>
@@ -348,7 +346,6 @@ export default function Terminal() {
           {activeSection === 'projects' && (
             <motion.div key="projects" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
               <div className="t-prompt">omphile@portfolio:~$ <span className="t-green">ls -la ./projects/</span></div>
-              <br />
               {data.projects.map((p, i) => (
                 <motion.div
                   key={p.name}
@@ -377,7 +374,6 @@ export default function Terminal() {
           {activeSection === 'credentials' && (
             <motion.div key="credentials" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
               <div className="t-prompt">omphile@portfolio:~$ <span className="t-green">cat credentials.json</span></div>
-              <br />
               <div className="t-line t-yellow">{'{'}</div>
               <div className="t-line">  <span className="t-blue">"certifications"</span>: [</div>
               {data.certifications.map((c, i) => (
@@ -400,15 +396,12 @@ export default function Terminal() {
           {activeSection === 'contact' && (
             <motion.div key="contact" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
               <div className="t-prompt">omphile@portfolio:~$ <span className="t-green">./contact --init</span></div>
-              <br />
               <div className="t-line t-green">Initializing contact protocol...</div>
               <div className="t-line t-green">✓ Connection established</div>
-              <br />
               <div className="t-line"><span className="t-yellow">EMAIL</span>    → <a href={`mailto:${data.email}`} className="t-blue">{data.email}</a></div>
               <div className="t-line"><span className="t-yellow">PHONE</span>    → <span className="t-white">{data.phone}</span></div>
               <div className="t-line"><span className="t-yellow">GITHUB</span>   → <a href={data.githubUrl} className="t-blue" target="_blank" rel="noreferrer">{data.github}</a></div>
               <div className="t-line"><span className="t-yellow">LOCATION</span> → <span className="t-white">{data.location}</span></div>
-              <br />
               <div className="t-line">
                 <span className="t-yellow">CV</span>      →
                 <a href={CV_URL} target="_blank" rel="noreferrer" className="t-blue" style={{ textDecoration: 'underline' }}>
@@ -417,9 +410,7 @@ export default function Terminal() {
                 <span className="t-dim"> — or type </span>
                 <span className="t-green">download-cv</span>
               </div>
-              <br />
               <div className="t-line t-dim"># — or fill the form below —</div>
-              <br />
               <ContactForm />
               <div className="t-prompt" style={{ marginTop: 20 }}>omphile@portfolio:~$ <span className="t-cursor">█</span></div>
             </motion.div>
