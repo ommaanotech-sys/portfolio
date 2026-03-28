@@ -1161,5 +1161,7 @@ a { text-decoration: none; color: inherit; }
   .t-dim { font-size: 11px !important; }
   /* Section text */
   .t-white { font-size: 13px !important; }
+  /* CLI: smaller font + scroll horizontally if still too wide */
+  .t-cli-boot { font-size: 11px !important; }
 }
 

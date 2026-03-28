@@ -25,10 +25,10 @@ function LiveTerminal() {
     '> Connecting to GitHub... ommaanotech-sys ✓',
     '> Establishing secure connection... AES-256 ✓',
     '',
-    '  ╔══════════════════════════════════════╗',
-    '  ║  omphile-portfolio — ready.         ║',
-    '  ║  Type "help" for available commands.  ║',
-    '  ╚══════════════════════════════════════╝',
+    '  ╔════════════════════════════╗',
+    '  ║  omphile-portfolio — ready.  ║',
+    '  ║  Type "help" for commands.   ║',
+    '  ╚════════════════════════════╝',
     '',
   ]
 
