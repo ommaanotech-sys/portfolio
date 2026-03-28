@@ -141,7 +141,7 @@ function LiveTerminal() {
     <div ref={sectionRef} onClick={() => inputRef.current?.focus()}>
       <div className="t-cli">
         {bootLines.map((line, i) => (
-          <div key={i} className="t-cli-boot">{line}</div>
+          <div key={i} className="t-cli-boot" style={{ overflowX: 'auto' }}>{line}</div>
         ))}
         {history.map((h, i) => (
           <div key={i}>

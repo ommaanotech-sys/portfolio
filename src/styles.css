@@ -696,9 +696,8 @@ a { text-decoration: none; color: inherit; }
 .t-exp { margin-bottom: 24px; }
 
 /* Live Terminal Prompt */
-.t-cli { display: flex; flex-direction: column; gap: 2px; }
-.t-cli-boot { font-size: 13px; color: #e0e0e0; line-height: 1.8; letter-spacing: 0.03em; }
-.t-cli-boot span { color: #4ade80; }
+.t-cli { display: flex; flex-direction: column; gap: 2px; overflow-x: auto; }
+.t-cli-boot { font-size: 13px; color: #e0e0e0; line-height: 1.8; letter-spacing: 0.03em; white-space: pre; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .t-cli-output { font-size: 12px; line-height: 2; white-space: pre-wrap; word-break: break-word; }
 .t-cli-input-row { display: flex; align-items: center; font-size: 12px; }
 .t-cli-input-row .t-prompt-label { color: #4ade80; margin-right: 8px; white-space: nowrap; }
@@ -729,6 +728,8 @@ a { text-decoration: none; color: inherit; }
 }
 .t-form-field input:focus, .t-form-field textarea:focus { border-color: #4ade80; }
 .t-form-field textarea { min-height: 80px; }
+.t-form-field { width: 100%; box-sizing: border-box; }
+.t-form-field input, .t-form-field textarea { width: 100%; box-sizing: border-box; }
 .t-form-err { font-size: 10px; color: #e63946; }
 .t-form-submit {
   align-self: flex-start; background: #0d1a0d; border: 1px solid #4ade80;
