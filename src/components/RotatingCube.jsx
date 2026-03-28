@@ -1,16 +1,15 @@
-import { useRef, useEffect, useState, useCallback } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 
 export default function RotatingCube() {
   const cubeRef = useRef(null)
+  const touchStart = useRef(null)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
   const [isMobile, setIsMobile] = useState(false)
-  const [isDragging, setIsDragging] = useState(false)
-  const lastTouch = useRef({ x: 0, y: 0 })
 
-  const springX = useSpring(x, { stiffness: 120, damping: 20 })
-  const springY = useSpring(y, { stiffness: 120, damping: 20 })
+  const springX = useSpring(x, { stiffness: 120, damping: 25 })
+  const springY = useSpring(y, { stiffness: 120, damping: 25 })
   const rotateX = useTransform(springY, [-0.5, 0.5], [18, -18])
   const rotateY = useTransform(springX, [-0.5, 0.5], [-18, 18])
 
@@ -21,7 +20,7 @@ export default function RotatingCube() {
     return () => window.removeEventListener('resize', check)
   }, [])
 
-  // Mouse tracking on desktop
+  // Mouse tracking (desktop)
   useEffect(() => {
     if (isMobile) return
     const handleMouseMove = (e) => {
@@ -38,39 +37,40 @@ export default function RotatingCube() {
     }
   }, [isMobile])
 
-  // Touch tracking on mobile
-  const handleTouchStart = useCallback((e) => {
+  // Touch tracking (mobile)
+  const handleTouchStart = (e) => {
     const touch = e.touches[0]
-    lastTouch.current = { x: touch.clientX, y: touch.clientY }
-    setIsDragging(true)
-  }, [])
+    touchStart.current = { x: touch.clientX, y: touch.clientY }
+  }
 
-  const handleTouchMove = useCallback((e) => {
-    if (!isDragging || !cubeRef.current) return
+  const handleTouchMove = (e) => {
+    if (!touchStart.current || !cubeRef.current) return
     const touch = e.touches[0]
     const rect = cubeRef.current.getBoundingClientRect()
     x.set((touch.clientX - (rect.left + rect.width / 2)) / rect.width)
     y.set((touch.clientY - (rect.top + rect.height / 2)) / rect.height)
-  }, [isDragging])
+  }
 
-  const handleTouchEnd = useCallback(() => {
-    setIsDragging(false)
+  const handleTouchEnd = () => {
+    touchStart.current = null
     x.set(0)
     y.set(0)
-  }, [])
+  }
 
   const size = isMobile ? 90 : 120
   const half = isMobile ? 45 : 60
 
-  const faceStyle = {
-    position: 'absolute',
-    width: size,
-    height: size,
-    border: '1.5px solid rgba(74,222,128,0.65)',
-    background: 'rgba(74,222,128,0.06)',
-    backdropFilter: 'blur(4px)',
-    boxShadow: 'inset 0 0 20px rgba(74,222,128,0.08)',
-  }
+  const faceBorder = '1.5px solid rgba(74,222,128,0.65)'
+  const faceBg = 'rgba(74,222,128,0.06)'
+
+  const faces = [
+    { transform: `translateZ(${half}px)` },
+    { transform: `rotateY(180deg) translateZ(${half}px)` },
+    { transform: `rotateY(90deg) translateZ(${half}px)` },
+    { transform: `rotateY(-90deg) translateZ(${half}px)` },
+    { transform: `rotateX(90deg) translateZ(${half}px)` },
+    { transform: `rotateX(-90deg) translateZ(${half}px)` },
+  ]
 
   return (
     <div
@@ -87,7 +87,7 @@ export default function RotatingCube() {
         style={{
           width: isMobile ? 130 : 180,
           height: isMobile ? 130 : 180,
-          background: 'radial-gradient(circle, rgba(74,222,128,0.35) 0%, transparent 70%)',
+          background: `radial-gradient(circle, rgba(74,222,128,0.35) 0%, transparent 70%)`,
           filter: 'blur(24px)',
           zIndex: 0,
         }}
@@ -95,32 +95,46 @@ export default function RotatingCube() {
         transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
       />
 
-      {/* Rotating + tilting cube */}
+      {/* Cube */}
       <motion.div
         style={{
+          width: size,
+          height: size,
           rotateX: isMobile ? rotateX : undefined,
           rotateY: isMobile ? rotateY : undefined,
           transformStyle: 'preserve-3d',
           zIndex: 1,
         }}
-        // Desktop: float + auto-rotate + mouse tilt
-        animate={!isMobile ? {
-          y: [0, -12, 0],
-          rotateX: [0, 360],
-          rotateY: [0, 360],
-        } : {}}
-        transition={!isMobile ? {
-          y: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
-          rotateX: { duration: 20, repeat: Infinity, ease: 'linear' },
-          rotateY: { duration: 14, repeat: Infinity, ease: 'linear' },
-        } : {}}
+        animate={
+          !isMobile
+            ? { y: [0, -12, 0], rotateX: [0, 360], rotateY: [0, 360] }
+            : {}
+        }
+        transition={
+          !isMobile
+            ? {
+                y: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
+                rotateX: { duration: 20, repeat: Infinity, ease: 'linear' },
+                rotateY: { duration: 14, repeat: Infinity, ease: 'linear' },
+              }
+            : {}
+        }
       >
-        <div style={{ ...faceStyle, transform: `translateZ(${half}px)` }} />
-        <div style={{ ...faceStyle, transform: `rotateY(180deg) translateZ(${half}px)` }} />
-        <div style={{ ...faceStyle, transform: `rotateY(90deg) translateZ(${half}px)` }} />
-        <div style={{ ...faceStyle, transform: `rotateY(-90deg) translateZ(${half}px)` }} />
-        <div style={{ ...faceStyle, transform: `rotateX(90deg) translateZ(${half}px)` }} />
-        <div style={{ ...faceStyle, transform: `rotateX(-90deg) translateZ(${half}px)` }} />
+        {faces.map((face, i) => (
+          <div
+            key={i}
+            style={{
+              position: 'absolute',
+              width: size,
+              height: size,
+              border: faceBorder,
+              background: faceBg,
+              backdropFilter: 'blur(4px)',
+              boxShadow: 'inset 0 0 20px rgba(74,222,128,0.08)',
+              ...face,
+            }}
+          />
+        ))}
       </motion.div>
 
       {/* Glow line */}
