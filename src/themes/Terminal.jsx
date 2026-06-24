@@ -177,12 +177,9 @@ function LiveTerminal() {
 }
 
 /* ─── GitHub-style Skill Bars ─── */
-function SkillBar({ name, level, delay }) {
+function SkillItem({ name, delay }) {
   const ref = useRef(null)
   const isIn = useInView(ref, { once: true, margin: '-60px' })
-  const filled = Math.round(level / 10)
-  const empty = 10 - filled
-  const label = level >= 90 ? 'Expert' : level >= 78 ? 'Advanced' : level >= 65 ? 'Proficient' : level >= 50 ? 'Intermediate' : 'Familiar'
   return (
     <motion.div
       ref={ref}
@@ -191,22 +188,8 @@ function SkillBar({ name, level, delay }) {
       animate={isIn ? { opacity: 1, x: 0 } : {}}
       transition={{ delay, duration: 0.4 }}
     >
-      <span className="t-skill-name">{name}</span>
-      <div className="t-skill-blocks">
-        {Array.from({ length: filled }, (_, i) => (
-          <motion.span
-            key={i}
-            className="t-skill-block filled"
-            initial={{ scaleY: 0 }}
-            animate={isIn ? { scaleY: 1 } : {}}
-            transition={{ delay: delay + i * 0.05, duration: 0.25, ease: [0.34, 1.56, 0.64, 1] }}
-          />
-        ))}
-        {Array.from({ length: empty }, (_, i) => (
-          <span key={`e-${i}`} className="t-skill-block empty" />
-        ))}
-      </div>
-      <span className="t-skill-label">{label}</span>
+      <span className="t-green">→</span>
+      <span className="t-skill-name" style={{ marginLeft: 10 }}>{name}</span>
     </motion.div>
   )
 }
@@ -334,7 +317,8 @@ export default function Terminal() {
             <motion.div key="skills" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
               <div className="t-prompt">omphile@portfolio:~$ <span className="t-green">./skills --list --verbose</span></div>
               {data.skills.map((s, i) => (
-                <SkillBar key={s.name} name={s.name} level={s.level} delay={i * 0.06} />
+              <SkillBar key={s.name} name={s.name} level={s.level} delay={i * 0.06} />
+))}
               ))}
               <div className="t-prompt mt-4">omphile@portfolio:~$ <span className="t-green">ls ./tech-stack/</span></div>
               <div className="t-tags">
