@@ -3,7 +3,7 @@ export const data = {
   firstName: 'Omphile',
   lastName: 'Maano',
   middleName: 'Molefe',
-  title: 'Junior IT Systems Developer',
+  title: 'IT Support Assistant & Web Administrator',
   subtitles: ['Junior IT Systems Developer', 'Web · Cloud · Systems', 'React · SQL · AWS · Python'],
   email: 'ommaano.tech@gmail.com',
   phone: '072 268 1455',
@@ -21,15 +21,15 @@ export const data = {
   ],
 
   skills: [
-    { name: 'React', level: 80 },
-    { name: 'HTML5 / CSS3', level: 90 },
-    { name: 'JavaScript', level: 78 },
-    { name: 'SQL & Databases', level: 85 },
-    { name: 'Python / Bash', level: 65 },
-    { name: 'AWS Cloud', level: 60 },
-    { name: 'Node.js', level: 55 },
-    { name: 'Git & GitHub', level: 75 },
-  ],
+  { name: 'HTML5 / CSS3 / JavaScript' },
+  { name: 'React & WordPress / WooCommerce' },
+  { name: 'SQL Database Management' },
+  { name: 'System & Network Support — LAN/WAN, TCP/IP' },
+  { name: 'Hardware Maintenance & Desktop Support' },
+  { name: 'Python / Bash Scripting' },
+  { name: 'AWS Cloud Fundamentals' },
+  { name: 'IT Asset Management & System Backups' },
+],
 
   techTags: ['React', 'Node.js', 'SQL', 'Python', 'AWS', 'Git', 'HTML5', 'CSS3', 'Three.js', 'Supabase', 'WordPress', 'Unity'],
 
