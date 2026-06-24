@@ -62,10 +62,7 @@ function LiveTerminal() {
       case '': return null
       case 'help': return `Available commands:\n  about        → Bio & overview\n  skills       → Technical skills\n  projects     → Featured projects\n  credentials  → Certs & education\n  contact      → Contact info\n  cv           → View CV info\n  download-cv  → Download CV (PDF)\n  whoami       → Current user\n  ls           → List sections\n  date         → Current date/time\n  clear        → Clear terminal\n  theme        → Theme info`
       case 'about': return `╔══════════════════════════════════════╗\n║  ${data.name}\n║  ${data.title}\n╚══════════════════════════════════════\n\n${data.bio}\n\nStatus:  ${data.available ? 'Available for work ✓' : 'Not available'}\nEmail:   ${data.email}\nPhone:   ${data.phone}\nGitHub:  ${data.github}\nLocation: ${data.location}`
-      case 'skills': return data.skills.map(s => {
-        const filled = Math.round(s.level / 5)
-        return `${s.name.padEnd(18)}[${'█'.repeat(filled)}${'░'.repeat(20 - filled)}] ${s.level}%`
-      }).join('\n') + '\n\nTech stack: ' + data.techTags.join(' · ')
+    case 'skills': return data.skills.map(s => `  → ${s.name}`).join('\n') + '\n\nTech stack: ' + data.techTags.join(' · ') 
       case 'projects': return data.projects.map(p =>
         `\n★ ${p.featured ? '(FEATURED) ' : ''}${p.name} [${p.year}]\n  ${p.desc}\n  Stack: ${p.tech.join(' · ')}\n  Link: ${p.link || 'N/A'}`
       ).join('')
