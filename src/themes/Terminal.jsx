@@ -62,8 +62,8 @@ function LiveTerminal() {
       case '': return null
       case 'help': return `Available commands:\n  about        → Bio & overview\n  skills       → Technical skills\n  projects     → Featured projects\n  credentials  → Certs & education\n  contact      → Contact info\n  cv           → View CV info\n  download-cv  → Download CV (PDF)\n  whoami       → Current user\n  ls           → List sections\n  date         → Current date/time\n  clear        → Clear terminal\n  theme        → Theme info`
       case 'about': return `╔══════════════════════════════════════╗\n║  ${data.name}\n║  ${data.title}\n╚══════════════════════════════════════\n\n${data.bio}\n\nStatus:  ${data.available ? 'Available for work ✓' : 'Not available'}\nEmail:   ${data.email}\nPhone:   ${data.phone}\nGitHub:  ${data.github}\nLocation: ${data.location}`
-    case 'skills': return data.skills.map(s => `  → ${s.name}`).join('\n') + '\n\nTech stack: ' + data.techTags.join(' · ') 
-      case 'projects': return data.projects.map(p =>
+     case 'skills': return data.skills.map(s => `  → ${s.name}`).join('\n') + '\n\nTech stack: ' + data.techTags.join(' · ')
+     case 'projects': return data.projects.map(p =>
         `\n★ ${p.featured ? '(FEATURED) ' : ''}${p.name} [${p.year}]\n  ${p.desc}\n  Stack: ${p.tech.join(' · ')}\n  Link: ${p.link || 'N/A'}`
       ).join('')
       case 'experience': return data.experience.map(e =>
@@ -314,9 +314,13 @@ export default function Terminal() {
             <motion.div key="skills" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
               <div className="t-prompt">omphile@portfolio:~$ <span className="t-green">./skills --list --verbose</span></div>
               {data.skills.map((s, i) => (
-              <SkillBar key={s.name} name={s.name} level={s.level} delay={i * 0.06} />
-              ))}
-              
+              <SkillItem
+                key={s.name}
+                name={s.name}
+                delay={i * 0.06}
+              />
+            ))}
+                                      
               <div className="t-prompt mt-4">omphile@portfolio:~$ <span className="t-green">ls ./tech-stack/</span></div>
               <div className="t-tags">
                 {data.techTags.map(t => <span key={t} className="t-tag">{t}</span>)}
