@@ -315,8 +315,8 @@ export default function Terminal() {
               <div className="t-prompt">omphile@portfolio:~$ <span className="t-green">./skills --list --verbose</span></div>
               {data.skills.map((s, i) => (
               <SkillBar key={s.name} name={s.name} level={s.level} delay={i * 0.06} />
-))}
               ))}
+              
               <div className="t-prompt mt-4">omphile@portfolio:~$ <span className="t-green">ls ./tech-stack/</span></div>
               <div className="t-tags">
                 {data.techTags.map(t => <span key={t} className="t-tag">{t}</span>)}
