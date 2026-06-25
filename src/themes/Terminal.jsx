@@ -1,42 +1,127 @@
-﻿import { useState, useEffect, useRef } from 'react'
-import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { useState, useEffect, useRef } from 'react'
 import { data } from '../data'
-import RotatingCube from '../components/RotatingCube'
 
+const BOOT_SEQ = [
+  '┌─────────────────────────────────────────────────────┐',
+  '│         OMPHILE MOLEFE MAANO — PORTFOLIO v3.0       │',
+  '│         IT Support Assistant & Web Administrator    │',
+  '└─────────────────────────────────────────────────────┘',
+  '',
+  '> Booting system...',
+  '> Loading profile data...          [OK]',
+  '> Mounting skills database...      [OK]',
+  '> Connecting to GitHub...          [OK]',
+  '> Status: Available for work ✓',
+  '',
+  'Type "help" to see available commands.',
+  '',
+]
 
-/* ─── Live CLI Prompt ─── */
-function LiveTerminal() {
+const COMMANDS = {
+  help: () =>
+    `AVAILABLE COMMANDS
+──────────────────────────────────────────
+  about        →  Who I am
+  skills       →  Technical skills
+  experience   →  Work history
+  projects     →  My projects
+  education    →  Qualifications
+  certs        →  Certifications
+  contact      →  Get in touch
+  cv           →  Download my CV
+  clear        →  Clear the terminal
+  whoami       →  Current user
+  date         →  Current date & time
+──────────────────────────────────────────`,
+
+  about: () =>
+    `ABOUT
+──────────────────────────────────────────
+  Name      →  ${data.name}
+  Role      →  ${data.title}
+  Location  →  ${data.location}
+  Status    →  ${data.available ? '✓ Available for work' : 'Not available'}
+
+  ${data.bio}`,
+
+  skills: () =>
+    `TECHNICAL SKILLS
+──────────────────────────────────────────
+${data.skills.map(s => `  →  ${s.name}`).join('\n')}
+
+TECH STACK
+──────────────────────────────────────────
+  ${data.techTags.join('  ·  ')}`,
+
+  experience: () =>
+    `EXPERIENCE
+──────────────────────────────────────────
+${data.experience.map(e =>
+  `  ${e.role}
+  ${e.company}  |  ${e.location}
+  ${e.period}
+
+${e.points.map(p => `    →  ${p}`).join('\n')}`
+).join('\n\n')}`,
+
+  projects: () =>
+    `PROJECTS
+──────────────────────────────────────────
+${data.projects.map(p =>
+  `  ${p.featured ? '★ ' : '  '}${p.name}  [${p.year} · ${p.type}]
+    ${p.desc}
+    Stack  →  ${p.tech.join(' · ')}${p.link ? `\n    Link   →  ${p.link}` : ''}`
+).join('\n\n')}`,
+
+  education: () =>
+    `EDUCATION
+──────────────────────────────────────────
+${data.education.map(e =>
+  `  ${e.degree}
+  ${e.school}  |  ${e.location}  |  ${e.year}`
+).join('\n\n')}`,
+
+  certs: () =>
+    `CERTIFICATIONS
+──────────────────────────────────────────
+${data.certifications.map(c =>
+  `  ${c.inProgress ? '○' : '✓'}  ${c.name}
+     ${c.org}  ·  ${c.year}`
+).join('\n\n')}`,
+
+  contact: () =>
+    `CONTACT
+──────────────────────────────────────────
+  EMAIL     →  ${data.email}
+  PHONE     →  ${data.phone}
+  GITHUB    →  ${data.githubUrl}
+  LOCATION  →  ${data.location}
+
+  Type "cv" to download my CV.`,
+
+  cv: () => '__DOWNLOAD_CV__',
+
+  whoami: () => `omphile`,
+
+  date: () => new Date().toString(),
+
+  clear: () => '__CLEAR__',
+}
+
+const CV_URL = 'https://raw.githubusercontent.com/ommaanotech-sys/portfolio/main/Omphile_Molefe%20Maano.pdf'
+
+export default function Terminal() {
   const [history, setHistory] = useState([])
   const [input, setInput] = useState('')
   const [cmdHistory, setCmdHistory] = useState([])
   const [cmdIdx, setCmdIdx] = useState(-1)
-  const [bootDone, setBootDone] = useState(false)
+  const [booting, setBooting] = useState(true)
   const [bootLines, setBootLines] = useState([])
   const inputRef = useRef(null)
   const bottomRef = useRef(null)
-  const sectionRef = useRef(null)
-  const isInView = useInView(sectionRef, { once: false, margin: '-80px' })
 
-  const BOOT_SEQ = [
-    '> Initializing portfolio v2.0.0...',
-    '> Loading system modules...',
-    '> Mounting /dev/creativity... OK',
-    '> Loading skills database... 8 entries found',
-    '> Connecting to GitHub... ommaanotech-sys ✓',
-    '> Establishing secure connection... AES-256 ✓',
-    '',
-    '  ╔════════════════════════════╗',
-    '  ║  omphile-portfolio — ready.  ║',
-    '  ║  Type "help" for commands.   ║',
-    '  ╚════════════════════════════╝',
-    '',
-  ]
-
+  // Boot sequence
   useEffect(() => {
-    if (!isInView) return
-    setBootLines([])
-    setBootDone(false)
-    setHistory([])
     let i = 0
     const interval = setInterval(() => {
       if (i < BOOT_SEQ.length) {
@@ -44,75 +129,70 @@ function LiveTerminal() {
         i++
       } else {
         clearInterval(interval)
-        setBootDone(true)
+        setBooting(false)
         setTimeout(() => inputRef.current?.focus(), 100)
       }
-    }, 90)
+    }, 80)
     return () => clearInterval(interval)
-  }, [isInView])
+  }, [])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [history, bootLines])
 
-  const CV_URL = 'https://raw.githubusercontent.com/ommaanotech-sys/portfolio/main/Omphile_Molefe%20Maano.pdf'
-
-  const getOutput = (cmd) => {
-    switch (cmd) {
-      case '': return null
-      case 'help': return `Available commands:\n  about        → Bio & overview\n  skills       → Technical skills\n  projects     → Featured projects\n  credentials  → Certs & education\n  contact      → Contact info\n  cv           → View CV info\n  download-cv  → Download CV (PDF)\n  whoami       → Current user\n  ls           → List sections\n  date         → Current date/time\n  clear        → Clear terminal\n  theme        → Theme info`
-      case 'about': return `╔══════════════════════════════════════╗\n║  ${data.name}\n║  ${data.title}\n╚══════════════════════════════════════\n\n${data.bio}\n\nStatus:  ${data.available ? 'Available for work ✓' : 'Not available'}\nEmail:   ${data.email}\nPhone:   ${data.phone}\nGitHub:  ${data.github}\nLocation: ${data.location}`
-     case 'skills': return data.skills.map(s => `  → ${s.name}`).join('\n') + '\n\nTech stack: ' + data.techTags.join(' · ')
-     case 'projects': return data.projects.map(p =>
-        `\n★ ${p.featured ? '(FEATURED) ' : ''}${p.name} [${p.year}]\n  ${p.desc}\n  Stack: ${p.tech.join(' · ')}\n  Link: ${p.link || 'N/A'}`
-      ).join('')
-      case 'experience': return data.experience.map(e =>
-        `\n[${e.period}] ${e.role}\n  ${e.company} — ${e.location}\n${e.points.map(p => '  → ' + p).join('\n')}`
-      ).join('')
-      case 'credentials': return 'Certifications:\n' +
-        data.certifications.map(c => `  • ${c.name} — ${c.org}, ${c.year}`).join('\n') +
-        '\n\nEducation:\n' +
-        data.education.map(e => `  • ${e.degree} — ${e.school}, ${e.year}`).join('\n')
-      case 'contact': return `Email:    ${data.email}\nPhone:   ${data.phone}\nGitHub:  ${data.githubUrl}\nLocation: ${data.location}`
-      case 'cv': return `CV — Omphile Molefe Maano\nSize:    PDF\n──────────────────────────────────\nRun: download-cv\nto initiate download.`
-      case 'download-cv': return '__DOWNLOAD_CV__'
-      case 'whoami': return 'omphile'
-      case 'ls': return 'about/  skills/  projects/  credentials/  contact/  cv/'
-      case 'date': return new Date().toString()
-      case 'clear': return '__CLEAR__'
-      case 'theme': return 'Terminal Theme — omphile-portfolio v2.0\nStyle: Vintage Hacker CLI\nFont: JetBrains Mono'
-      default: return `bash: ${cmd}: command not found\nType "help" for available commands.`
-    }
-  }
-
   const runCommand = (raw) => {
     const cmd = raw.trim().toLowerCase()
-    const out = getOutput(cmd)
-    if (out === '__CLEAR__') { setHistory([]) }
-    else if (out === '__DOWNLOAD_CV__') {
-      setHistory(prev => [...prev, { cmd: raw, out: null }])
-      setTimeout(() => { window.open(CV_URL, '_blank') }, 300)
+    const fn = COMMANDS[cmd]
+
+    if (!fn) {
+      setHistory(prev => [...prev, {
+        cmd: raw,
+        out: `bash: ${cmd}: command not found\nType "help" for available commands.`,
+        error: true,
+      }])
+      setCmdHistory(prev => [raw, ...prev])
+      setCmdIdx(-1)
+      setInput('')
+      return
+    }
+
+    const result = fn()
+
+    if (result === '__CLEAR__') {
+      setHistory([])
+      setCmdHistory(prev => [raw, ...prev])
+      setCmdIdx(-1)
+      setInput('')
+      return
+    }
+
+    if (result === '__DOWNLOAD_CV__') {
+      setHistory(prev => [...prev, {
+        cmd: raw,
+        out: '> Initiating CV download...',
+      }])
       setTimeout(() => {
+        window.open(CV_URL, '_blank')
         setHistory(prev => {
           const updated = [...prev]
           updated[updated.length - 1] = {
             cmd: raw,
-            out: `✓ Download started successfully.\n\nIf it didn't start, visit:\nhttps://github.com/ommaanotech-sys/portfolio\nand find Omphile_Molefe Maano.pdf`
+            out: `> Initiating CV download...
+✓  Download started.
+
+  If it did not start automatically:
+  ${CV_URL}`,
           }
           return updated
         })
-      }, 2500)
-    } else if (out !== null) {
-      setHistory(prev => [...prev, { cmd: raw, out: null }])
-      const result = out
-      setTimeout(() => {
-        setHistory(prev => {
-          const updated = [...prev]
-          updated[updated.length - 1] = { cmd: raw, out: result }
-          return updated
-        })
-      }, 3000)
+      }, 400)
+      setCmdHistory(prev => [raw, ...prev])
+      setCmdIdx(-1)
+      setInput('')
+      return
     }
+
+    setHistory(prev => [...prev, { cmd: raw, out: result }])
     setCmdHistory(prev => [raw, ...prev])
     setCmdIdx(-1)
     setInput('')
@@ -135,272 +215,105 @@ function LiveTerminal() {
   }
 
   return (
-    <div ref={sectionRef} onClick={() => inputRef.current?.focus()}>
-      <div className="t-cli">
-        {bootLines.map((line, i) => (
-          <div key={i} className="t-cli-boot" style={{ overflowX: 'auto' }}>{line}</div>
-        ))}
-        {history.map((h, i) => (
-          <div key={i}>
-            <div className="t-cli-hist-cmd">omphile@portfolio:~$ {h.cmd}</div>
-            {h.out === null ? (
-              <div className="t-cli-hist-out t-cli-processing">
-                Processing<span className="t-proc-dots" />
-              </div>
-            ) : (
-              <div className="t-cli-hist-out">{h.out}</div>
-            )}
-          </div>
-        ))}
-        {bootDone && (
-          <div className="t-cli-input-row">
-            <span className="t-prompt-label">omphile@portfolio:~$</span>
-            <input
-              ref={inputRef}
-              className="t-cli-input"
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={handleKey}
-              autoFocus
-              spellCheck={false}
-              autoComplete="off"
-            />
-          </div>
-        )}
-        <div ref={bottomRef} />
-      </div>
-    </div>
-  )
-}
-
-/* ─── GitHub-style Skill Bars ─── */
-function SkillItem({ name, delay }) {
-  const ref = useRef(null)
-  const isIn = useInView(ref, { once: true, margin: '-60px' })
-  return (
-    <motion.div
-      ref={ref}
-      className="t-skill-row"
-      initial={{ opacity: 0, x: -10 }}
-      animate={isIn ? { opacity: 1, x: 0 } : {}}
-      transition={{ delay, duration: 0.4 }}
+    <div
+      style={{
+        minHeight: '100vh',
+        background: '#0d0d0d',
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        padding: '40px 16px',
+        fontFamily: "'JetBrains Mono', 'Fira Code', 'Courier New', monospace",
+      }}
+      onClick={() => inputRef.current?.focus()}
     >
-      <span className="t-green">→</span>
-      <span className="t-skill-name" style={{ marginLeft: 10 }}>{name}</span>
-    </motion.div>
-  )
-}
+      <div style={{ width: '100%', maxWidth: 860 }}>
 
-/* ─── Contact Form ─── */
-function ContactForm() {
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
-  const [errs, setErrs] = useState({})
-  const [submitting, setSubmitting] = useState(false)
-  const [success, setSuccess] = useState(false)
-  const ref = useRef(null)
-  const isIn = useInView(ref, { once: true, margin: '-60px' })
-
-  const validate = () => {
-    const e = {}
-    if (!form.name.trim()) e.name = 'Required'
-    if (!form.email.includes('@')) e.email = 'Valid email required'
-    if (!form.subject.trim()) e.subject = 'Required'
-    if (!form.message.trim()) e.message = 'Required'
-    return e
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    const e2 = validate()
-    if (Object.keys(e2).length) { setErrs(e2); return }
-    setSubmitting(true); setErrs({})
-    setTimeout(() => { setSuccess(true); setSubmitting(false) }, 1500)
-  }
-
-  if (success) return (
-    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="t-form-success">
-      <svg className="anim-checkmark" viewBox="0 0 42 42">
-        <circle className="c-circle" cx="21" cy="21" r="18" />
-        <path className="c-check" d="M12 21l6 6 12-12" />
-      </svg>
-      Message transmitted. I will get back to you soon.
-    </motion.div>
-  )
-
-  return (
-    <motion.form
-      ref={ref}
-      className="t-form"
-      initial={{ opacity: 0 }}
-      animate={isIn ? { opacity: 1 } : {}}
-      onSubmit={handleSubmit}
-    >
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-        <div className="t-form-field">
-          <label>name</label>
-          <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Your name" />
-          {errs.name && <span className="t-form-err">{errs.name}</span>}
+        {/* Title bar */}
+        <div style={{
+          background: '#1a1a1a',
+          borderRadius: '8px 8px 0 0',
+          padding: '10px 16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          borderBottom: '1px solid #333',
+        }}>
+          <span style={{ width: 12, height: 12, borderRadius: '50%', background: '#ff5f57', display: 'inline-block' }} />
+          <span style={{ width: 12, height: 12, borderRadius: '50%', background: '#febc2e', display: 'inline-block' }} />
+          <span style={{ width: 12, height: 12, borderRadius: '50%', background: '#28c840', display: 'inline-block' }} />
+          <span style={{ flex: 1, textAlign: 'center', color: '#888', fontSize: 13 }}>
+            omphile@portfolio:~
+          </span>
         </div>
-        <div className="t-form-field">
-          <label>email</label>
-          <input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} placeholder="you@example.com" />
-          {errs.email && <span className="t-form-err">{errs.email}</span>}
-        </div>
-      </div>
-      <div className="t-form-field">
-        <label>subject</label>
-        <input value={form.subject} onChange={e => setForm(f => ({ ...f, subject: e.target.value }))} placeholder="What is this about?" />
-        {errs.subject && <span className="t-form-err">{errs.subject}</span>}
-      </div>
-      <div className="t-form-field">
-        <label>message</label>
-        <textarea value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} placeholder="Your message..." rows={4} />
-        {errs.message && <span className="t-form-err">{errs.message}</span>}
-      </div>
-      <button type="submit" className="t-form-submit" disabled={submitting}>
-        {submitting ? '> transmitting...' : '> send_message'}
-      </button>
-    </motion.form>
-  )
-}
 
-/* ─── Main Terminal ─── */
-export default function Terminal() {
-  const [activeSection, setActiveSection] = useState('about')
-  const sections = ['about', 'skills', 'projects', 'credentials', 'contact']
-  const CV_URL = 'https://raw.githubusercontent.com/ommaanotech-sys/portfolio/main/Omphile_Molefe%20Maano.pdf'
+        {/* Terminal body */}
+        <div style={{
+          background: '#0d0d0d',
+          border: '1px solid #222',
+          borderTop: 'none',
+          borderRadius: '0 0 8px 8px',
+          padding: '24px 28px',
+          minHeight: '80vh',
+          color: '#c8c8c8',
+          fontSize: 14,
+          lineHeight: 1.7,
+        }}>
 
-  return (
-    <div className="t-wrap">
-      <div className="t-titlebar">
-        <div className="t-dots">
-          <span style={{ background: '#ff5f57' }} />
-          <span style={{ background: '#febc2e' }} />
-          <span style={{ background: '#28c840' }} />
-        </div>
-        <span className="t-wintitle">omphile@portfolio:~</span>
-        <div style={{ width: 52 }} />
-      </div>
+          {/* Boot lines */}
+          {bootLines.map((line, i) => (
+            <div key={i} style={{ color: i < 3 ? '#28c840' : '#888', whiteSpace: 'pre' }}>
+              {line}
+            </div>
+          ))}
 
-      <div className="t-nav">
-        {sections.map(s => (
-          <button
-            key={s}
-            className={`t-nav-btn${activeSection === s ? ' active' : ''}`}
-            onClick={() => setActiveSection(s)}
-          >
-            {activeSection === s ? '▶ ' : '  '}{s}
-          </button>
-        ))}
-      </div>
-
-      <div className="t-body">
-        <AnimatePresence>
-          {activeSection === 'about' && (
-            <motion.div key="about" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
-              <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
-                <div className="flex-1 min-w-0">
-                  <LiveTerminal />
-                </div>
-                {/* Cube — right on desktop, hidden on mobile */}
-                <div className="hidden md:flex flex-shrink-0 items-center justify-center" style={{ width: 220, height: 220 }}>
-                  <RotatingCube />
-                </div>
+          {/* Command history */}
+          {history.map((h, i) => (
+            <div key={i} style={{ marginTop: 12 }}>
+              <div style={{ color: '#28c840' }}>
+                omphile@portfolio:~$ <span style={{ color: '#fff' }}>{h.cmd}</span>
               </div>
-            </motion.div>
-          )}
+              <div style={{
+                color: h.error ? '#ff5f57' : '#c8c8c8',
+                whiteSpace: 'pre-wrap',
+                marginTop: 4,
+                paddingLeft: 4,
+              }}>
+                {h.out}
+              </div>
+            </div>
+          ))}
 
-          {activeSection === 'skills' && (
-            <motion.div key="skills" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
-              <div className="t-prompt">omphile@portfolio:~$ <span className="t-green">./skills --list --verbose</span></div>
-              {data.skills.map((s, i) => (
-              <SkillItem
-                key={s.name}
-                name={s.name}
-                delay={i * 0.06}
+          {/* Input */}
+          {!booting && (
+            <div style={{ display: 'flex', alignItems: 'center', marginTop: 12 }}>
+              <span style={{ color: '#28c840', flexShrink: 0 }}>
+                omphile@portfolio:~$&nbsp;
+              </span>
+              <input
+                ref={inputRef}
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={handleKey}
+                autoFocus
+                spellCheck={false}
+                autoComplete="off"
+                style={{
+                  flex: 1,
+                  background: 'transparent',
+                  border: 'none',
+                  outline: 'none',
+                  color: '#fff',
+                  fontFamily: 'inherit',
+                  fontSize: 14,
+                  caretColor: '#28c840',
+                }}
               />
-            ))}
-                                      
-              <div className="t-prompt mt-4">omphile@portfolio:~$ <span className="t-green">ls ./tech-stack/</span></div>
-              <div className="t-tags">
-                {data.techTags.map(t => <span key={t} className="t-tag">{t}</span>)}
-              </div>
-            </motion.div>
+            </div>
           )}
 
-          {activeSection === 'projects' && (
-            <motion.div key="projects" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
-              <div className="t-prompt">omphile@portfolio:~$ <span className="t-green">ls -la ./projects/</span></div>
-              {data.projects.map((p, i) => (
-                <motion.div
-                  key={p.name}
-                  className="t-project"
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.08, duration: 0.3 }}
-                >
-                  <div className="t-project-header">
-                    <span className="t-yellow">drwxr-xr-x</span>
-                    <span className="t-green"> {p.featured ? '★ ' : '  '}{p.name}/</span>
-                    <span className="t-dim"> [{p.year} · {p.type}]</span>
-                  </div>
-                  <div className="t-project-body">
-                    <div className="t-line t-dim">  └─ {p.desc}</div>
-                    <div className="t-line">  └─ <span className="t-yellow">stack:</span> {p.tech.join(' · ')}</div>
-                    {p.link && (
-                      <div className="t-line">  └─ <a href={p.link} target="_blank" rel="noreferrer" className="t-blue" style={{ textDecoration: 'underline' }}>{p.link}</a></div>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
-
-          {activeSection === 'credentials' && (
-            <motion.div key="credentials" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
-              <div className="t-prompt">omphile@portfolio:~$ <span className="t-green">cat credentials.json</span></div>
-              <div className="t-line t-yellow">{'{'}</div>
-              <div className="t-line">  <span className="t-blue">"certifications"</span>: [</div>
-              {data.certifications.map((c, i) => (
-                <div key={i} className="t-line t-dim">
-                  {'    { '}<span className="t-green">"{c.name}"</span>{` · ${c.org} · ${c.year} }`}{i < data.certifications.length - 1 ? ',' : ''}
-                </div>
-              ))}
-              <div className="t-line">  ],</div>
-              <div className="t-line">  <span className="t-blue">"education"</span>: [</div>
-              {data.education.map((e, i) => (
-                <div key={i} className="t-line t-dim">
-                  {'    { '}<span className="t-green">"{e.degree}"</span>{` · ${e.school} · ${e.year} }`}{i < data.education.length - 1 ? ',' : ''}
-                </div>
-              ))}
-              <div className="t-line">  ]</div>
-              <div className="t-line t-yellow">{'}'}</div>
-            </motion.div>
-          )}
-
-          {activeSection === 'contact' && (
-            <motion.div key="contact" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
-              <div className="t-prompt">omphile@portfolio:~$ <span className="t-green">./contact --init</span></div>
-              <div className="t-line t-green">Initializing contact protocol...</div>
-              <div className="t-line t-green">✓ Connection established</div>
-              <div className="t-line"><span className="t-yellow">EMAIL</span>    → <a href={`mailto:${data.email}`} className="t-blue">{data.email}</a></div>
-              <div className="t-line"><span className="t-yellow">PHONE</span>    → <span className="t-white">{data.phone}</span></div>
-              <div className="t-line"><span className="t-yellow">GITHUB</span>   → <a href={data.githubUrl} className="t-blue" target="_blank" rel="noreferrer">{data.github}</a></div>
-              <div className="t-line"><span className="t-yellow">LOCATION</span> → <span className="t-white">{data.location}</span></div>
-              <div className="t-line">
-                <span className="t-yellow">CV</span>      →
-                <a href={CV_URL} target="_blank" rel="noreferrer" className="t-blue" style={{ textDecoration: 'underline' }}>
-                  Download CV (PDF)
-                </a>
-                <span className="t-dim"> — or type </span>
-                <span className="t-green">download-cv</span>
-              </div>
-              <div className="t-line t-dim"># — or fill the form below —</div>
-              <ContactForm />
-              <div className="t-prompt" style={{ marginTop: 8 }}>omphile@portfolio:~$ <span className="t-cursor">█</span></div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+          <div ref={bottomRef} />
+        </div>
       </div>
     </div>
   )
