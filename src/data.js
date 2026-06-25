@@ -4,35 +4,31 @@ export const data = {
   lastName: 'Maano',
   middleName: 'Molefe',
   title: 'IT Support Assistant & Web Administrator',
-  subtitles: ['Junior IT Systems Developer', 'Web · Cloud · Systems', 'React · SQL · AWS · Python'],
+  subtitles: ['IT Support Assistant', 'Web · WordPress · WooCommerce', 'React · SQL · AWS · CompTIA A+'],
   email: 'ommaano.tech@gmail.com',
   phone: '072 268 1455',
-  location: 'South Africa',
+  location: 'Klerksdorp, NW, South Africa',
   github: 'github.com/ommaanotech-sys',
   githubUrl: 'https://github.com/ommaanotech-sys',
-  bio: 'Engineer with a precise eye for systems design, clean code, and real-world problem solving. I build software that works — from full-stack web apps with AI integration to cloud-connected platforms.',
+  bio: 'IT Support Technician with 2+ years of hands-on experience in desktop support, network connectivity, hardware maintenance and web technologies. Skilled in HTML5, CSS3, JavaScript, React, WordPress and WooCommerce. Holds an NQF Level 5 qualification in IT System Development and multiple CIW Web certifications.',
   available: true,
-
   stats: [
-    { num: '4+', label: 'Certifications' },
+    { num: '5+', label: 'Certifications' },
     { num: '3', label: 'Projects' },
-    { num: '2yr', label: 'Industry' },
+    { num: '2yr', label: 'Experience' },
     { num: 'NQF5', label: 'Qualified' },
   ],
-
   skills: [
-  { name: 'HTML5 / CSS3 / JavaScript' },
-  { name: 'React & WordPress / WooCommerce' },
-  { name: 'SQL Database Management' },
-  { name: 'System & Network Support — LAN/WAN, TCP/IP' },
-  { name: 'Hardware Maintenance & Desktop Support' },
-  { name: 'Python / Bash Scripting' },
-  { name: 'AWS Cloud Fundamentals' },
-  { name: 'IT Asset Management & System Backups' },
-],
-
-  techTags: ['React', 'Node.js', 'SQL', 'Python', 'AWS', 'Git', 'HTML5', 'CSS3', 'Three.js', 'Supabase', 'WordPress', 'Unity'],
-
+    { name: 'HTML5 / CSS3 / JavaScript' },
+    { name: 'React & WordPress / WooCommerce' },
+    { name: 'SQL Database Management' },
+    { name: 'System & Network Support — LAN/WAN, TCP/IP' },
+    { name: 'Hardware Maintenance & Desktop Support' },
+    { name: 'Python / Bash Scripting' },
+    { name: 'AWS Cloud Fundamentals' },
+    { name: 'IT Asset Management & System Backups' },
+  ],
+  techTags: ['React', 'Node.js', 'SQL', 'Python', 'AWS', 'Git', 'HTML5', 'CSS3', 'WordPress', 'WooCommerce', 'Three.js', 'Supabase'],
   projects: [
     {
       name: 'WinLog',
@@ -61,33 +57,37 @@ export const data = {
       icon: '▶',
     },
   ],
-
   experience: [
     {
-      role: 'Digital Printer Operator',
+      role: 'IT Support Assistant / Digital Printer Operator',
       company: 'Justagz and Labels',
       location: 'Krugersdorp, South Africa',
       period: '03/2022 – 06/2024',
       points: [
-        'Maintained LAN connectivity and data integrity between workstations and production servers',
-        'First-line troubleshooting on Roland large-format printers — reduced production downtime',
-        'Deployed and supported CorelDRAW, Adobe Illustrator, and VersaWorks across Windows workstations',
-        'Streamlined production workflows, improving efficiency and turnaround times',
-        'Managed vendor relationships and supply inventory to ensure zero production disruption',
+        'Operated Roland large-format printing machines to produce labels and printed materials for clients.',
+        'Set up and configured Windows workstations, installed software and connected peripheral devices.',
+        'Maintained LAN connectivity for production workstations, minimising downtime and ensuring continuous access to shared resources.',
+        'Provided IT support to staff, diagnosing and resolving hardware, software and connectivity problems.',
+        'Managed printers from an IT perspective — driver installation, software configuration and troubleshooting.',
+        'Performed routine system backups and data integrity checks, safeguarding critical business information.',
+        'Managed IT asset inventory and maintained accurate records of hardware and supplies.',
       ],
     },
   ],
-
   certifications: [
-    { name: 'CIW Web Design Professional', org: 'CIW', year: '2021', inProgress: false },
-    { name: 'CIW Web Design Specialist', org: 'CIW', year: '2021', inProgress: false },
     { name: 'CIW Web Foundation Associate', org: 'CIW', year: '2020', inProgress: false },
+    { name: 'CIW Web Design Specialist', org: 'CIW', year: '2021', inProgress: false },
     { name: 'CIW E-Commerce Specialist', org: 'CIW', year: '2020', inProgress: false },
-    { name: 'Adobe Certified Professional — Photoshop', org: 'Adobe', year: '2020', inProgress: false },
-    { name: 'AWS Solutions Architect — Associate', org: 'AWS', year: 'In Progress', inProgress: true },
+    { name: 'CompTIA A+', org: 'CompTIA', year: 'Expected 2026', inProgress: true },
+    { name: 'AWS Solutions Architect — Associate', org: 'AWS', year: 'Currently Studying', inProgress: true },
   ],
-
   education: [
+    {
+      degree: 'National Certificate, IT / System Development — NQF Level 5',
+      school: 'CTU Training Solutions',
+      location: 'Potchefstroom, South Africa',
+      year: '2022',
+    },
     {
       degree: 'High School Diploma',
       school: 'Realeka Secondary School',
