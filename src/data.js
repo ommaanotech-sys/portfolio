@@ -7,7 +7,7 @@ export const data = {
   subtitles: ['IT Support Assistant', 'Web · WordPress · WooCommerce', 'React · SQL · AWS · CompTIA A+'],
   email: 'ommaano.tech@gmail.com',
   phone: '072 268 1455',
-  location: 'Klerksdorp, NW, South Africa',
+  location: 'Johannesburg, GP South Africa',
   github: 'github.com/ommaanotech-sys',
   githubUrl: 'https://github.com/ommaanotech-sys',
   bio: 'IT Support Technician with 2+ years of hands-on experience in desktop support, network connectivity, hardware maintenance and web technologies. Skilled in HTML5, CSS3, JavaScript, React, WordPress and WooCommerce. Holds an NQF Level 5 qualification in IT System Development and multiple CIW Web certifications.',
